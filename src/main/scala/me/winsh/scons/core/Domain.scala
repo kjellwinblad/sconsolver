@@ -26,6 +26,18 @@ trait Domain extends Iterable[Int] {
   def onlyOneContains(that: Domain): Domain
 
   def domainWithSmallestMinFirst(that: Domain): (Domain, Domain)
+  
+  def greaterThan(number:Int):Domain
+
+  def lessThan(number:Int):Domain
+
+  def greaterThanOrEqual(number:Int):Domain
+
+  def lessThanOrEqual(number:Int):Domain
+  
+  def fixPoint:Boolean = this.size==1
+	
+  def failed:Boolean = this.isEmpty
 
 }
 
@@ -72,7 +84,7 @@ object Domain {
         new DomainImpl(concatenateOrderedRangesIfAdjecent(this.domainRanges ++ that.domainRanges))
       else if (that.max < this.min)
         new DomainImpl(concatenateOrderedRangesIfAdjecent(that.domainRanges ++ this.domainRanges))
-      else {
+      else { 
 
         def union(subtractFrom: List[Range],
           subtract: List[Range],
@@ -294,7 +306,39 @@ object Domain {
         onlyOneContains(this.domainWithSmallestMinFirst(that), Nil)
 
       }
+    
+      def greaterThan(number:Int) = {
+    	  
+    	  val ranges =domainRanges.dropWhile((r)=>(r.max < number))
+    	  
+    	  ranges match {
+    	 	  case Nil => new DomainImpl(Nil) 
+    	 	  case e::rest if( e.min > number) => new DomainImpl(e::rest)
+    	 	  case e::rest => new DomainImpl((number +1 to e.max)::rest) 
+    	  }
+      }
+    	  
+    	  
 
+      def lessThan(number:Int) = {
+    	  
+    	  val ranges =(domainRanges.takeWhile((r)=>(r.min < number))).reverse
+    	  
+    	  new DomainImpl((ranges match {
+    	 	  case Nil => Nil 
+    	 	  case e::rest if( e.max < number) => e::rest
+    	 	  case e::rest => (e.min to number -1)::rest
+    	  }).reverse)
+      }
+
+      def greaterThanOrEqual(number:Int) = greaterThan(number - 1)
+
+      def lessThanOrEqual(number:Int) = lessThan(number +1)
+    
+
+      override def toString = "Domain(" + domainRanges.map((d)=>(""+(if(d.min == d.max) d.min 
+    		  									        else  d.min + " to " + d.max))).mkString(", ") + ")"
+      
     def domainWithSmallestMinFirst(that: Domain) = (this, that) match {
       case (Domain.empty, _) => (this, that)
       case (_, Domain.empty) => (this, that)

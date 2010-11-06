@@ -70,7 +70,7 @@ class DomainTest {
   def intersection() = {
 	
 	  //Everything intersects
-	/*{
+	{
       val domain1 = Domain(1 to 10)
       
       val domain2 = Domain(1 to 10)
@@ -89,7 +89,7 @@ class DomainTest {
       assertEquals(Domain(5 to 10), domain1.intersection(domain2))
       
       assertEquals(Domain(5 to 10), domain2.intersection(domain1))
-    }*/
+    }
 	
 	//Complex intersection 1
 	{
@@ -285,7 +285,73 @@ class DomainTest {
 	  
   
   }
+    
+  @Test
+  def greaterThan() = {
+	  {
+		  val domain = Domain(10 to 20);
+	   
+		  assertEquals(Domain(16 to 20), domain.greaterThan(15))
+	  }
 
+	   
+	  {
+		  val domain = Domain((0 to 5).union(10 to 20).union(30 to 40));
+	   
+		  assertEquals(Domain((16 to 20).union(30 to 40)), domain.greaterThan(15))
+	  }
+  }
+
+  @Test
+  def lessThan() = {
+	  /*{
+		  val domain = Domain(10 to 20);
+	   
+		  assertEquals(Domain(10 to 14), domain.lessThan(15))
+	  }*/
+
+	   
+	  {
+		  val domain = Domain((0 to 5).union(10 to 20).union(30 to 40));
+	   
+		  assertEquals(Domain((0 to 5).union(10 to 14)), domain.lessThan(15))
+	  }
+	  
+  }
+
+    @Test
+  def greaterThanOrEqual() = {
+	  {
+		  val domain = Domain(10 to 20);
+	   
+		  assertEquals(Domain(15 to 20), domain.greaterThanOrEqual(15))
+	  }
+
+	   
+	  {
+		  val domain = Domain((0 to 5).union(10 to 20).union(30 to 40));
+	   
+		  assertEquals(Domain((15 to 20).union(30 to 40)), domain.greaterThanOrEqual(15))
+	  }
+	  
+  }
+
+  @Test
+  def lessThanOrEqual() = {
+	  {
+		  val domain = Domain(10 to 20);
+	   
+		  assertEquals(Domain(10 to 15), domain.lessThanOrEqual(15))
+	  }
+
+	   
+	  {
+		  val domain = Domain((0 to 5).union(10 to 20).union(30 to 40));
+	   
+		  assertEquals(Domain((0 to 5).union(10 to 15)), domain.lessThanOrEqual(15))
+	  }
+  }
+  
   //    @Test
   //    def testKO() = assertTrue(false)
 
