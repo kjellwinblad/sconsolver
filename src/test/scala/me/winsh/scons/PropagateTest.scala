@@ -11,11 +11,11 @@ class PropagateTest {
 	@Test
 	def propagate(){
 		
-		val simpleCSP = new CSP {
+		val simpleCSP = new SimpleCSPBase {
 			
-			val x:Var =  5 to 15
+			val x =  newIntVar(5 to 15)
 			
-			val y:Var =  1 to 10
+			val y =  newIntVar(1 to 10)
 			 
 			lessThanOrEqual(x, y)
 			
@@ -24,7 +24,7 @@ class PropagateTest {
 			val s = initialStore
 			
 			val p = initialPropagatorSet
-			
+			 
 			val (newP, newS) = Propagate.propagate(p, s)
 			
 			

@@ -11,11 +11,17 @@ trait Store {
 
   def apply(variable: Var, domain: Domain): Store
 
-  def conatins(variable: Var): Boolean
+  def contains(variable: Var): Boolean
 
   def getDomain(variable: Var): Domain
 
   def changedVars(that: Store):Set[Var]
+  
+  def firstUnassignedVar:Var
+  
+  def failed:Boolean
+  
+  def fixPoint:Boolean
 
 }
 
@@ -35,7 +41,7 @@ object Store {
       case Some(domain) => domain
     }
 
-    def conatins(variable: Var) = variableToDomainMap.contains(variable)
+    def contains(variable: Var) = variableToDomainMap.contains(variable)
 
     def changedVars(that: Store) = {
       
@@ -44,10 +50,45 @@ object Store {
     	HashSet[Var]() ++ variableToDomainMap.filter((vd)=>that(vd._1) != vd._2).map(_._1)
       
     }
+    
+    def firstUnassignedVar = {
+    	
+    	val op =variableToDomainMap.find((varDomain)=>{
+    
+    		val (variable, domain) = varDomain
+    	
+    		if(domain.fixPoint || domain.failed)
+    			false
+    		else
+    			true
+    	})
+    	
+    	op match {
+    		case Some(x)=>x._1
+    		case None => variableToDomainMap.head._1
+    	}
+    }
+    
+    def failed = variableToDomainMap.exists((varDomain)=>{
+    
+    	val (_, domain) = varDomain
+    	
+    	domain.failed
+    })
+    
+    def fixPoint = variableToDomainMap.forall((varDomain)=>{
+    
+    	val (_, domain) = varDomain
+    	
+    	domain.fixPoint
+    })
 
+    override def equals (that: Any) = that.asInstanceOf[Store].variableToDomainMap == this.variableToDomainMap
+    
     override def toString = variableToDomainMap.toList.
       sortWith((a, b) => (a._1.id < b._1.id)).
       map(e => (e._1 + "->" + e._2)).mkString(", ")
+      
   }
 
 }

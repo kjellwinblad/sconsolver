@@ -15,7 +15,7 @@ trait Domain extends Iterable[Int] {
 
   val min: Int
 
-  val max: Int
+  val max: Int 
 
   def union(that: Domain): Domain
 
@@ -78,9 +78,13 @@ object Domain {
       require(domainRanges != Nil)
       domainRanges.last.max
     }
-
+ 
     def union(that: Domain): Domain =
-      if (this.max < that.min)
+      if(this.isEmpty)
+    	  that
+      else if(that.isEmpty)
+    	  this 
+      else if (this.max < that.min)
         new DomainImpl(concatenateOrderedRangesIfAdjecent(this.domainRanges ++ that.domainRanges))
       else if (that.max < this.min)
         new DomainImpl(concatenateOrderedRangesIfAdjecent(that.domainRanges ++ this.domainRanges))
@@ -345,12 +349,13 @@ object Domain {
       case _ => if (this.min <= that.min) (this, that) else (that, this)
     }
 
-    val iterator = new Iterator[Int] {
+    def iterator = new Iterator[Int] {
 
       var domainRangesPos = 0
       var rangePos = 0
 
       def next = {
+
         val domainRange = domainRanges(domainRangesPos)
         val element = domainRange(rangePos)
 
@@ -365,7 +370,7 @@ object Domain {
         element
       }
 
-      def hasNext = domainRanges.size > domainRangesPos
+      def hasNext =  domainRanges.size > domainRangesPos
 
     }
 

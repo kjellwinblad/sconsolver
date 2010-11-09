@@ -2,25 +2,25 @@ package me.winsh.scons.propagators
 
 import me.winsh.scons.core._
 
-class LessThanOrEqualPropagator(val x:Var,val y:Var) extends Propagator{
+class EqualsPropagator(val x:Var,val y:Var) extends Propagator{
 
 	val parameters:List[Var] = List(x, y) 
 	
 	def propagate(s:Store) = {
 		
 		val xDomain = s(x)
-		
+
 		val yDomain = s(y)
 		
-		val newDomainX = xDomain.lessThanOrEqual(yDomain.max)
+		val newDomainX = xDomain.intersection(yDomain)
 		
-		val newDomainY = yDomain.greaterThanOrEqual(xDomain.min)
+		val newDomainY = yDomain.intersection(xDomain)
 		
 		val newStore = s(x, newDomainX)(y, newDomainY)
 		
 		if(newDomainX.failed || newDomainY.failed)
 			(Failed(), newStore)
-		else if(newDomainX.max <= newDomainY.min)
+		if(newDomainX.fixPoint || newDomainY.fixPoint)
 			(Subsumed(), newStore)
 		else
 			(FixPoint(), newStore)

@@ -2,7 +2,7 @@ package me.winsh.scons.propagators
 
 import me.winsh.scons.core._
 
-class LessThanOrEqualPropagator(val x:Var,val y:Var) extends Propagator{
+class NotEqualsPropagator(val x:Var,val y:Var) extends Propagator{
 
 	val parameters:List[Var] = List(x, y) 
 	
@@ -12,15 +12,18 @@ class LessThanOrEqualPropagator(val x:Var,val y:Var) extends Propagator{
 		
 		val yDomain = s(y)
 		
-		val newDomainX = xDomain.lessThanOrEqual(yDomain.max)
+		def single(d:Domain) = if(d.fixPoint) d else Domain()
 		
-		val newDomainY = yDomain.greaterThanOrEqual(xDomain.min)
+		
+		val newDomainX = xDomain.difference(single(yDomain))
+		
+		val newDomainY = yDomain.difference(single(xDomain))
 		
 		val newStore = s(x, newDomainX)(y, newDomainY)
 		
 		if(newDomainX.failed || newDomainY.failed)
 			(Failed(), newStore)
-		else if(newDomainX.max <= newDomainY.min)
+		else if(newDomainX.intersection(newDomainY).isEmpty)
 			(Subsumed(), newStore)
 		else
 			(FixPoint(), newStore)

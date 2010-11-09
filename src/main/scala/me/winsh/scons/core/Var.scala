@@ -11,6 +11,15 @@ trait Var {
 	override def toString = "Var(" + id +")"
 }
 
+trait IntVar extends Var{
+	def <=(that:IntVar):Propagator
+	def >=(that:IntVar):Propagator
+	def <(that:IntVar):Propagator
+	def >(that:IntVar):Propagator
+	def ===(that:IntVar):Propagator
+	def !==(that:IntVar):Propagator
+	
+}
 object Var {
 	
 	

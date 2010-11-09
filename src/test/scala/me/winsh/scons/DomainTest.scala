@@ -10,7 +10,7 @@ class DomainTest {
   @Test
   def iterateOverNewDomain() = {
 
-	   
+	    
     {
       val domain = Domain(4, 10)
 
