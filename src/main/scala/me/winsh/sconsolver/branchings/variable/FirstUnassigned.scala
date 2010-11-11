@@ -4,13 +4,13 @@ import me.winsh.sconsolver.core._
 
 object FirstUnassigned extends VarBranching{
 
-	def firstUnassignedBranchingFun(propagators:Set[Propagator],store:Store,valBrancing:ValBranching) ={
+	def firstUnassignedBranchingFun(propagators:List[Propagator],store:Store,valBrancing:ValBranching) ={
 		
 		val unassignedVar = store.firstUnassignedVar
 		
-		valBrancing.branching(unassignedVar,store)
+		valBrancing.branches(unassignedVar,store)
 	}
 	
-	val branching:((Set[Propagator],Store,ValBranching)=>(List[Set[Propagator]], Store)) = firstUnassignedBranchingFun
+	val branches:((List[Propagator],Store,ValBranching)=>(List[List[Propagator]], Store)) = firstUnassignedBranchingFun
 
 }

@@ -1,6 +1,5 @@
-package me.winsh.sconsolver
+package me.winsh.sconsolver.core
 
-import me.winsh.sconsolver.core._
 import me.winsh.sconsolver.propagators._
 import org.junit._
 import Assert._
@@ -10,7 +9,7 @@ class CSPTest {
 	@Test
 	def simpleDefinitionTest {
 		
-		val simpleCSP = new SimpleCSPBase {
+		val simpleCSP = new CSPModel {
 			
 			val x =  newIntVar(1 to 10)
 			
@@ -24,7 +23,7 @@ class CSPTest {
 			
 			assertEquals(Domain(5 to 15), s(y))
 			
-			assertEquals(new LessThanOrEqualPropagator(x,y), initialPropagatorSet.toList.first)
+			assertEquals(new LessThanOrEqualPropagator(x,y), initialPropagators.head)
 		}
 		
 	}
@@ -32,7 +31,7 @@ class CSPTest {
 	@Test
 	def infixConstraintNotificationTest {
 		
-		val simpleCSP = new SimpleCSPBase {
+		val simpleCSP = new CSPModel {
 			
 			val x:Var =  newIntVar(5 to 15)
 			
@@ -40,31 +39,31 @@ class CSPTest {
 			
 			x <= y
 			
-			val constant = newIntVar(7)
+			val constant = c(7)
 			y <= constant
 			
 			val s = initialStore
 			
-			val p = initialPropagatorSet
+			val p = initialPropagators
 			
 			val (newP, newS) = Propagate.propagate(p, s)
 					
-			assertTrue(newP.contains(new LessThanOrEqualPropagator(x,y)))
+			assertTrue(newP.toSet.contains(new LessThanOrEqualPropagator(x,y)))
 			
-			assertFalse(newP.contains(new LessThanOrEqualPropagator(y,constant)))
+			assertFalse(newP.toSet.contains(new LessThanOrEqualPropagator(y,constant)))
 			
 			assertEquals(Domain(5 to 7), newS(x))
 			
 			assertEquals(Domain(5 to 7), newS(y))
 		}
 		 
-	}
+	} 
 	
 	
 		@Test
 	def findFirstTest {
 		
-		val simpleCSP = new SimpleCSPBase {
+		val simpleCSP = new CSPModel {
 			
 			val x =  newIntVar(5 to 15)
 			

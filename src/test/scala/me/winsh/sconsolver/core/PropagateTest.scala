@@ -1,6 +1,5 @@
-package me.winsh.sconsolver
+package me.winsh.sconsolver.core
 
-import me.winsh.sconsolver.core._
 import me.winsh.sconsolver.propagators._
 import org.junit._
 import Assert._
@@ -11,7 +10,7 @@ class PropagateTest {
 	@Test
 	def propagate(){
 		
-		val simpleCSP = new SimpleCSPBase {
+		val simpleCSP = new CSPModel {
 			
 			val x =  newIntVar(5 to 15)
 			
@@ -23,7 +22,7 @@ class PropagateTest {
 			
 			val s = initialStore
 			
-			val p = initialPropagatorSet
+			val p = initialPropagators
 			 
 			val (newP, newS) = Propagate.propagate(p, s)
 			

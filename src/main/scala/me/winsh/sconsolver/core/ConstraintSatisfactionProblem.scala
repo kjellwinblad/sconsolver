@@ -1,32 +1,48 @@
 package me.winsh.sconsolver.core
 
 import me.winsh.sconsolver.constraints._
-import me.winsh.sconsolver.search.DepthFirstSearchFindFirst
+import me.winsh.sconsolver.search.DepthFirstSearch
 import me.winsh.sconsolver.branchings.value._
 import me.winsh.sconsolver.branchings.variable._
 
 import scala.collection.immutable.HashSet
 
-trait SimpleCSPBase extends ConstraintSatisfactionProblemBase[Store]{
+trait CSPModel extends ConstraintSatisfactionProblemModel[Store]{
 	
 	val storeToResultFunction:((Store)=>Store) = (s:Store)=>s
+
+	val branching:Branching = Branching(FirstUnassigned, MinValue)
 	
+	def findFirstSolution:Option[Store] = 
+		DepthFirstSearch.findFirstSolution(initialPropagators,
+												initialStore,
+												branching,
+												storeToResultFunction)
 } 
 
-trait CSPBase[R] extends ConstraintSatisfactionProblemBase[R]
 
-trait ConstraintSatisfactionProblemBase[R] 
+trait ConstraintSatisfactionProblemModel[R] 
       extends IntRelationConstraints  with DistinctConstraint{
+	
+	//Model definition
+	//================
 	
 	private var variableList = List[(Var, Domain)]()
 	
 	private var propagatorList = List[Propagator]()
 
-	private var branching = Branching(FirstUnassigned, MinValue)
+	val branching:Branching
 	
 	def initialStore:Store = Store(variableList.toList)
 	
-	def initialPropagatorSet:Set[Propagator] = HashSet[Propagator]() ++ propagatorList
+	def initialPropagators:List[Propagator] = propagatorList
+	
+	val storeToResultFunction:((Store)=>R)
+	
+	def findFirstSolution:Option[R]
+	
+	//Domain Specific Language
+	//========================
 	
 	def add(variable:Var, domain:Domain) = {
 		 
@@ -44,6 +60,8 @@ trait ConstraintSatisfactionProblemBase[R]
 		
 	}
 	
+	//IntVar declarations
+	
 	def newIntVar(d:Domain):Var = {
 		
 		val newVar = Var()
@@ -53,48 +71,32 @@ trait ConstraintSatisfactionProblemBase[R]
 		newVar
 	}
 
-	def newIntVar():Var = {
-		
-		val newVar = Var()
-		
-		add(newVar, Domain(Int.MaxValue, Int.MinValue))
-		
-		newVar
-	}
+	def newIntVar():Var = newIntVar(Domain(Int.MaxValue, Int.MinValue))
 	
-	def newIntVar(domainValues: Iterable[Int]):Var = newIntVar(Domain(domainValues.toList))
+	def newIntVar(min:Int, max:Int):Var = newIntVar(Domain(min, max))
 	
-	def newIntVarMinMax(min: Int, max: Int):Var = newIntVar(Domain(min,max))
+	def newIntVar(values:Iterable[Int]):Var = newIntVar(Domain(values.toList))
 	
-	def newIntVar(domainValues: Int*):Var = newIntVar(Domain(domainValues.toList))
+	def newIntVarConstant(value:Int):Var = newIntVar(Domain(value))
 	
-	val storeToResultFunction:((Store)=>R)
-	
-	def findFirstSolution:Option[R] = 
-		DepthFirstSearchFindFirst.findFirst[R](initialPropagatorSet,
-												initialStore,
-												branching,
-												storeToResultFunction)
-	 
-	implicit def range2var(r:Range): Var = {
-		
-		val newVar = Var()
-		
-		add(newVar, Domain(r))
-		
-		newVar
-		
-	}
+	def c(value:Int) = newIntVarConstant(value)
 
-	implicit def int2var(i:Int): Var = {
-		
-		val newVar = Var()
-		
-		add(newVar, Domain(i))
-		
-		newVar
-		
-	}
+	//implicit def range2var(r:Range): Var = newIntVar(Domain(r))
+
+	implicit def int2var(i:Int): Var = c(i)
+	
+	//BoolVar declarations
+	
+	def newBoolVar():Var = newIntVar(Domain(0, 1))
+	
+	def newBoolVarConstant(value:Boolean):Var = newIntVar(Domain(if(true) 1 else 0))
+	
+	def c(value:Boolean) = newBoolVarConstant(value)
+	 
+	implicit def boolean2var(value:Boolean): Var = c(value)
+	
+
+	//Helper to add constraints
 	
 	implicit def var2intVar(v:Var): IntVar = {
 		

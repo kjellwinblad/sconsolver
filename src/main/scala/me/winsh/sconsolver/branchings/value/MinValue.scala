@@ -15,13 +15,13 @@ object MinValue extends ValBranching{
 
 			val newS = s(brancingVar, brancingVarDomain)
 
-			val branchingPropagatorSet1 = Set[Propagator](new EqualsPropagator(variable,brancingVar))
+			val branchingPropagatorSet1 = List[Propagator](new EqualsPropagator(variable,brancingVar))
 			
-			val branchingPropagatorSet2 = Set[Propagator](new NotEqualsPropagator(variable,brancingVar))
+			val branchingPropagatorSet2 = List[Propagator](new NotEqualsPropagator(variable,brancingVar))
 			
 			(List(branchingPropagatorSet1, branchingPropagatorSet2), newS)
 		}
 	
-		val branching:((Var,Store)=>(List[Set[Propagator]], Store)) = minValueBranchingFun
+		val branches:((Var,Store)=>(List[List[Propagator]], Store)) = minValueBranchingFun
 	
 }

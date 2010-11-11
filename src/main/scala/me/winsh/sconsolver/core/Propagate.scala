@@ -7,16 +7,16 @@ import scala.collection.immutable.HashSet
 
 object Propagate {
 
-	def propagate(propagatorSet:Set[Propagator], store:Store) ={
+	def propagate(propagators:List[Propagator], store:Store) ={
 		
 		def p(props:List[Propagator], 
-			  sleepingProps:Set[Propagator],
-			  subsumedProps:Set[Propagator], 
-			  s:Store):(Set[Propagator], Store) =
+			  sleepingProps:List[Propagator],
+			  subsumedProps:List[Propagator], 
+			  s:Store):(List[Propagator], Store) =
 			if(props.isEmpty) 
-				(propagatorSet.diff(subsumedProps), s)
+				(propagators.diff(subsumedProps), s)
 			else if(s.failed)
-				(propagatorSet.diff(subsumedProps), s)
+				(propagators.diff(subsumedProps), s)
 			else {
 			 
 				val prop::propsRest = props
@@ -24,8 +24,8 @@ object Propagate {
 				val(propMessage, newS) = prop.propagate(s)
 				
 				val (newSubsumedProps, newSleepingProps1, newProps1) =  propMessage match {
-					case Subsumed() => (subsumedProps + prop, sleepingProps, propsRest)
-					case FixPoint() => (subsumedProps, sleepingProps + prop, propsRest) 
+					case Subsumed() => (prop::subsumedProps, sleepingProps, propsRest)
+					case FixPoint() => (subsumedProps, prop::sleepingProps, propsRest) 
 					case NoFixPoint() if(s==newS)=> (subsumedProps, sleepingProps, propsRest)
 					case NoFixPoint() => (subsumedProps, sleepingProps, props)
 					case Failed() => (subsumedProps, sleepingProps, propsRest) 
@@ -37,14 +37,14 @@ object Propagate {
 						propToFilter.parameters.exists((parVar)=>changedVars.contains(parVar))
 					})
 				
-				val newProps2 = (HashSet[Propagator]()++newProps1).union(effectedProps).toList
+				val newProps2 = effectedProps:::newProps1
 				
 				val newSleepingProps2 = newSleepingProps1.diff(effectedProps)
 				
 				p(newProps2, newSleepingProps2, newSubsumedProps,newS)
 			}
 		
-			p(propagatorSet.toList, HashSet[Propagator](), HashSet[Propagator](), store)
+			p(propagators, List[Propagator](), List[Propagator](), store)
 	}
 	
 	

@@ -8,7 +8,7 @@ case class Naive extends DistinctAlgorithmType
 
 class DistinctPropagator(val vars:List[Var], algorithmType:DistinctAlgorithmType = Naive()) extends Propagator{
 	
-	val parameters:List[Var] = vars 
+	val parameters:List[Var] = vars  
 	
 	def propagate(s:Store) = algorithmType match {
 		case Naive() =>  propagateNaive(s)
@@ -18,18 +18,20 @@ class DistinctPropagator(val vars:List[Var], algorithmType:DistinctAlgorithmType
 		
 		def single(d:Domain) = if(d.fixPoint) d else Domain()
 		
-		val parametersArray = parameters.toArray
+		val parametersArray = parameters
 		
 		val domainList = parametersArray.map((v)=>s(v))
 		
-		val subtractList = domainList.map((d)=>single(d))
-		
-		val subtractSet = subtractList.foldLeft(Domain())((domainSum,d)=>domainSum.union(d))
+		val subtractList = domainList.map((d)=>single(d)).zipWithIndex
 		
 		val newDomainList = domainList.zipWithIndex.map((domainIndex)=>{
 			val (domain, index) = domainIndex
 			
-			(domain.difference(subtractSet.difference(subtractList(index))), index)
+			val withoutThisDomain = subtractList.filterNot((e)=>e._2==index).map(_._1)
+			
+			val subtractStore = withoutThisDomain.foldLeft(Domain())((sum, d)=>sum.union(d))
+			
+			(domain.difference(subtractStore), index)
 		})
 		
 		val newStore = newDomainList.foldLeft(s)((newS,domainIndex)=>{

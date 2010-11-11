@@ -1,6 +1,6 @@
-package me.winsh.sconsolver
+package me.winsh.sconsolver.core
 
-import me.winsh.sconsolver.core._
+
 import org.junit._
 import Assert._
 

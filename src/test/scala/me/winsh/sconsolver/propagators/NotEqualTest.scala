@@ -1,7 +1,6 @@
-package me.winsh.sconsolver
+package me.winsh.sconsolver.propagators
 
 import me.winsh.sconsolver.core._
-import me.winsh.sconsolver.propagators._
 import org.junit._
 import Assert._
 
@@ -12,17 +11,17 @@ class NotEqualTest {
 	def notEqualSuccessTest{
 		
 		
-		val simpleCSP = new SimpleCSPBase {
+		val simpleCSP = new CSPModel {
 			
 			val x =  newIntVar(10 to 15)
 			
-			val y =  newIntVar(8)
+			val y =  c(8)
 			
 			x !== y
 			
 			val s = initialStore
 			
-			val p = initialPropagatorSet
+			val p = initialPropagators
 			
 			val (newP, newS) = Propagate.propagate(p, s)
 
@@ -44,17 +43,17 @@ class NotEqualTest {
 	def notEqualFailTest{
 		
 		
-		val simpleCSP = new SimpleCSPBase {
+		val simpleCSP = new CSPModel {
 			
-			val x =  newIntVar(5)
+			val x =  c(5)
 			
-			val y =  newIntVar(5)
+			val y =  c(5)
 			
 			x !== y
 			
 			val s = initialStore
 			
-			val p = initialPropagatorSet
+			val p = initialPropagators
 			
 			val (newP, newS) = Propagate.propagate(p, s)
 			
