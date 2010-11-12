@@ -11,7 +11,7 @@ class EqualTest {
 	def equalSuccessTest{
 		
 		
-		val simpleCSP = new CSPModel {
+		val simpleCSP = new BasicCSPModel {
 			
 			val x =  newIntVar(5 to 15)
 			
@@ -43,7 +43,7 @@ class EqualTest {
 	def equalFailTest{
 		
 		
-		val simpleCSP = new CSPModel {
+		val simpleCSP = new BasicCSPModel {
 			
 			val x =  newIntVar(5 to 15)
 			

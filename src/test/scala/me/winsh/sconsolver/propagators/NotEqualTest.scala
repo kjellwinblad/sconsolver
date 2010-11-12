@@ -11,7 +11,7 @@ class NotEqualTest {
 	def notEqualSuccessTest{
 		
 		
-		val simpleCSP = new CSPModel {
+		val simpleCSP = new BasicCSPModel {
 			
 			val x =  newIntVar(10 to 15)
 			
@@ -43,7 +43,7 @@ class NotEqualTest {
 	def notEqualFailTest{
 		
 		
-		val simpleCSP = new CSPModel {
+		val simpleCSP = new BasicCSPModel {
 			
 			val x =  c(5)
 			

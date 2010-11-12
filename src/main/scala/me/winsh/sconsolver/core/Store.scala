@@ -85,9 +85,9 @@ object Store {
 
     override def equals (that: Any) = that.asInstanceOf[Store].variableToDomainMap == this.variableToDomainMap
     
-    override def toString = variableToDomainMap.toList.
+    override def toString = "Store(" + variableToDomainMap.toList.
       sortWith((a, b) => (a._1.id < b._1.id)).
-      map(e => (e._1 + "->" + e._2)).mkString(", ")
+      map(e => (e._1 + "->" + e._2)).mkString(", ") + ")"
       
   }
 

@@ -10,7 +10,7 @@ class PropagateTest {
 	@Test
 	def propagate(){
 		
-		val simpleCSP = new CSPModel {
+		val simpleCSP = new BasicCSPModel {
 			
 			val x =  newIntVar(5 to 15)
 			

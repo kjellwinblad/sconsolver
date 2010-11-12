@@ -8,14 +8,14 @@ class CSPTest {
 	
 	@Test
 	def simpleDefinitionTest {
-		
-		val simpleCSP = new CSPModel {
-			
+		 
+		val simpleCSP = new BasicCSPModel {
+			 
 			val x =  newIntVar(1 to 10)
 			
 			val y =  newIntVar(5 to 15)
 			 
-			lessThanOrEqual(x, y)
+			lessThanOrEqual(x, y) 
 			
 			val s = initialStore 
 			
@@ -31,7 +31,7 @@ class CSPTest {
 	@Test
 	def infixConstraintNotificationTest {
 		
-		val simpleCSP = new CSPModel {
+		val simpleCSP = new BasicCSPModel {
 			
 			val x:Var =  newIntVar(5 to 15)
 			
@@ -63,7 +63,7 @@ class CSPTest {
 		@Test
 	def findFirstTest {
 		
-		val simpleCSP = new CSPModel {
+		val simpleCSP = new BasicCSPModel {
 			
 			val x =  newIntVar(5 to 15)
 			

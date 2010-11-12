@@ -4,57 +4,63 @@ import me.winsh.sconsolver.core._
 
 object DepthFirstSearch extends SearchMethod {
 
-  def findFirstSolution[R](
+  def find[R](
     propagators: List[Propagator],
     store: Store,
     branching: Branching,
-    f: (Store) => R = ((s: Store) => s)) = {
+    numberOfSolutions: Int = -1,
+    f: (List[R], Store) => List[R] = ((l: List[R], s: Store) => s :: l),
+    constrain: (Store) => (List[Propagator], List[(Var, Domain)]) = ((s: Store) => (Nil, Nil))): List[R] = {
 
-    def findFirstInter(propagators: List[Propagator], store: Store): Option[Store] = {
+    case class EnoughSolutionsException(solutions: List[R]) extends Exception
+
+    def find(
+      propagators: List[Propagator],
+      store: Store,
+      resultSoFar: List[R],
+      numberOfSolutions: Int): (List[R], Int) = {
 
       val (newPropagators, newStore1) = Propagate.propagate(propagators, store)
 
       if (newStore1.failed)
-        None
-      else if (newStore1.fixPoint)
-        Some(newStore1)
-      else {
- 
-        val (branches, newStore2) = branching.varBranching.branches(newPropagators, newStore1, branching.valBranching)
+        (resultSoFar, numberOfSolutions)
+      else if (newStore1.fixPoint) {
+        if (numberOfSolutions == 1)
+          throw EnoughSolutionsException(f(resultSoFar, newStore1))
+        else
+          (f(resultSoFar, newStore1), numberOfSolutions - 1)
+      } else {
 
-        def findFirstSolutionInBranches(branches: List[List[Propagator]],
-          solution: Option[Store]): Option[Store] = branches match {
-          case Nil => solution
-          case newProps :: rest =>
-            findFirstInter(newProps:::newPropagators, newStore2) match { 
-              case Some(x) => findFirstSolutionInBranches(Nil, Some(x))
-              case None => findFirstSolutionInBranches(rest, None)
-            }
+        val (branches, newStore2) = branching.branches(newPropagators, newStore1)
 
+        def solutionsInBranches(
+          branches: List[List[Propagator]],
+          bSolutionsSoFar: List[R],
+          numberOfSolutions: Int): (List[R], Int) = branches match {
+          case Nil => (bSolutionsSoFar, numberOfSolutions)
+          case bProps :: rest => {
+
+            val (solutionsInBranch, newNumberOfSolutions) =
+              find(bProps ::: newPropagators, newStore2, Nil, numberOfSolutions)
+
+            solutionsInBranches(rest, solutionsInBranch ::: bSolutionsSoFar, newNumberOfSolutions)
+
+          }
         }
 
-        findFirstSolutionInBranches(branches, None)
+        solutionsInBranches(branches, Nil, numberOfSolutions)
       }
 
     }
 
-    findFirstInter(propagators, store) match {
-      case Some(s) => Some(f(s))
-      case None => None
+    val solutions = try {
+      val (solutions, _) = find(propagators, store, Nil, numberOfSolutions)
+      solutions
+    } catch {
+      case EnoughSolutionsException(solutions) => solutions
     }
 
+    solutions
   }
-  
-  	def findBestSolution[R](propagators:List[Propagator],
-					 store:Store, 
-					 branching:Branching,
-					 solutionEvaluationProps:(Store)=>List[Propagator],
-					 f:(Store)=>R = ((s:Store)=>s)):Option[R] =Some(f(store))
-	
-	def findAllSolutions[R](propagators:List[Propagator],
-					 store:Store, 
-					 branching:Branching, 
-					 f:(List[R], Store)=>List[R] = ((l:List[R], s:Store)=>s::l)):List[R] = f(Nil,store)
-  
 
 }

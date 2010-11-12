@@ -11,7 +11,7 @@ class DistinctTest {
   @Test
   def testFail {
 
-    val solver = new CSPModel {
+    val solver = new BasicCSPModel {
 
       val varList = List.fill(3)(newIntVar(1 to 2))
 
@@ -24,7 +24,7 @@ class DistinctTest {
       case None => Unit
     }
 
-    val solver2 = new CSPModel {
+    val solver2 = new BasicCSPModel {
 
       val varList = List.fill(2)(c(1))
 
@@ -42,7 +42,7 @@ class DistinctTest {
   @Test
   def testSuccess {
 
-    val solver = new CSPModel {
+    val solver = new BasicCSPModel {
 
       val varList = List.fill(3)(newIntVar(1 to 3))
 
@@ -55,7 +55,7 @@ class DistinctTest {
       case None => fail("The model should not fail here.")
     }
 
-    val solver2 = new CSPModel {
+    val solver2 = new BasicCSPModel {
 
       val varList = List.fill(2)(newIntVar(1 to 2))
 
@@ -101,7 +101,7 @@ class DistinctTest {
     }
 
     //The Constraint Satisfaction Problem (CSP) for Soduku
-    class SudokuSolver(val sudokuBord: SudokuBoard) extends CSPModel {
+    class SudokuSolver(val sudokuBord: SudokuBoard) extends BasicCSPModel {
 
       //Declare vars representing the soduku matrix
       val rows =
