@@ -17,6 +17,8 @@ trait Store {
 
   def changedVars(that: Store):Set[Var]
   
+  def addVars(varsWithDomain:List[(Var, Domain)]):Store
+  
   def firstUnassignedVar:Var
   
   def failed:Boolean
@@ -37,7 +39,7 @@ object Store {
       new StoreImpl(variableToDomainMap.updated(variable, domain))
 
     def getDomain(variable: Var) = variableToDomainMap.get(variable) match {
-      case None => throw new Exception("Can not find variable with id " + variable.id + " in the store.")
+      case None => throw new Exception("Can not find variable with id " + variable.id + " in the store.\n" + this)
       case Some(domain) => domain
     }
 
@@ -67,6 +69,11 @@ object Store {
     		case Some(x)=>x._1
     		case None => variableToDomainMap.head._1
     	}
+    }
+    
+    def addVars(varsWithDomain:List[(Var, Domain)]) = varsWithDomain match {
+    	case Nil => this
+    	case varList => new StoreImpl(variableToDomainMap ++ varsWithDomain)
     }
     
     def failed = variableToDomainMap.exists((varDomain)=>{

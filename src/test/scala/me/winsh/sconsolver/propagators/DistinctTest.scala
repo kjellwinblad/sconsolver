@@ -71,7 +71,7 @@ class DistinctTest {
   }
 
   @Test
-  def sudokuTest {
+  def sudokuTest { 
 
     //Beatufier for Soduku Strings
     def formatCompactSudokuString(s: String) =

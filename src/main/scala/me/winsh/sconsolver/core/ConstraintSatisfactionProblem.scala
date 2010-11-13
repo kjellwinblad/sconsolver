@@ -9,7 +9,7 @@ import scala.collection.immutable.HashSet
 
 trait BasicCSPModel extends ConstraintSatisfactionProblemModel[Store] {
 
-  def solutionStoreToSolutionTypeFunction(s: Store) = s
+  def solutionStoreToSolution(s: Store) = s
 
 
 }
@@ -33,12 +33,14 @@ trait ConstraintSatisfactionProblemModel[R]
   //Configurations
   //==============
 
-  def solutionStoreToSolutionTypeFunction(s:Store):R
+  def solutionStoreToSolution(s:Store):R
 
   var branching: Branching = Branching(FirstUnassigned, MinValue)
   
   var searchMethod:SearchMethod = DepthFirstSearch
 
+  def constrain(s:Store):Unit = require(false,"The constrain(s:Store) method need to be defined in the model in order to call findBestSolution")
+  
   //Convenience Methods
   //===================
 
@@ -54,14 +56,22 @@ trait ConstraintSatisfactionProblemModel[R]
       initialPropagators,
       initialStore,
       branching,
-      solutionStoreToSolutionTypeFunction)
+      solutionStoreToSolution)
       
   def findAllSolutions: List[R] =
     searchMethod.findAllSolutions(
       initialPropagators,
       initialStore,
       branching,
-      ((l: List[R], s: Store) => (solutionStoreToSolutionTypeFunction(s) :: l)))
+      ((l: List[R], s: Store) => (solutionStoreToSolution(s) :: l)))
+
+  def findBestSolution: Option[R] =
+    searchMethod.findBestSolution(
+      initialPropagators,
+      initialStore,
+      branching,
+      constrainTransformation,
+      solutionStoreToSolution)
       
   //Domain Specific Language
   //========================
@@ -91,6 +101,28 @@ trait ConstraintSatisfactionProblemModel[R]
     add(newVar, d)
 
     newVar
+  }
+  
+  private def constrainTransformation(s:Store):(List[Propagator], List[(Var,Domain)]) = {
+    	
+	  val varListBeforeConstrain = this.variableList 
+	  
+	  val propagatorListBeforeConstrain = this.propagatorList
+	  
+	  constrain(s)
+	  
+	  val varListToReturn = this.variableList  -- varListBeforeConstrain
+	  
+	  val propagatorListToReturn = this.propagatorList -- propagatorListBeforeConstrain
+	  
+	  //Reset
+	  
+	  this.variableList = varListBeforeConstrain
+	  
+	  this.propagatorList = propagatorListBeforeConstrain
+	  
+	  (propagatorListToReturn, varListToReturn)
+	   
   }
 
   def newIntVar(): Var = newIntVar(Domain(Int.MaxValue, Int.MinValue))

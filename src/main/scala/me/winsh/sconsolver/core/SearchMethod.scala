@@ -23,7 +23,7 @@ trait SearchMethod {
     propagators: List[Propagator],
     store: Store,
     branching: Branching,
-    constrain: (Store) => (List[Propagator], List[(Var, Domain)]),
+    constrain: (Store) => (List[Propagator], List[(Var,Domain)]),
     f: (Store) => R = ((s: Store) => s)): Option[R] = {
 
     val solutionTransformation =
@@ -52,7 +52,7 @@ trait SearchMethod {
     propagators: List[Propagator],
     store: Store,
     branching: Branching,
-    numberOfSolutions: Int = 0,
+    numberOfSolutions: Int = -1,
     f: (List[R], Store) => List[R] = ((l: List[R], s: Store) => s :: l),
     constrain: (Store) => (List[Propagator], List[(Var, Domain)]) = ((s: Store) => (Nil, Nil))): List[R]
 }

@@ -8,6 +8,7 @@ import scala.collection.immutable.HashSet
 object Propagate {
 
 	def propagate(propagators:List[Propagator], store:Store) ={
+
 		
 		def p(props:List[Propagator], 
 			  sleepingProps:List[Propagator],
@@ -18,7 +19,7 @@ object Propagate {
 			else if(s.failed)
 				(propagators.diff(subsumedProps), s)
 			else {
-			 
+
 				val prop::propsRest = props
 				 
 				val(propMessage, newS) = prop.propagate(s)
