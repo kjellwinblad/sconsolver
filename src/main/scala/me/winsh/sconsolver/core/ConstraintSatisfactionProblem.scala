@@ -20,7 +20,7 @@ trait CSPModel[R] extends ConstraintSatisfactionProblemModel[R] {
 }
 
 trait ConstraintSatisfactionProblemModel[R]
-  extends IntRelationConstraints with DistinctConstraint {
+  extends IntRelationConstraints with DistinctConstraint with ArithmeticsConstraints{
 
 
   //Domain Specific Language State
@@ -91,17 +91,6 @@ trait ConstraintSatisfactionProblemModel[R]
     propagator
 
   }
-
-  //IntVar declarations
-
-  def newIntVar(d: Domain): Var = {
-
-    val newVar = Var()
-
-    add(newVar, d)
-
-    newVar
-  }
   
   private def constrainTransformation(s:Store):(List[Propagator], List[(Var,Domain)]) = {
     	
@@ -125,8 +114,19 @@ trait ConstraintSatisfactionProblemModel[R]
 	   
   }
 
-  def newIntVar(): Var = newIntVar(Domain(Int.MaxValue, Int.MinValue))
+    //IntVar declarations
 
+  def newIntVar(d: Domain): Var = {
+
+    val newVar = Var()
+
+    add(newVar, d)
+
+    newVar
+  }
+  
+  def newIntVar(): Var = newIntVar(-10000000, 10000000)
+  
   def newIntVar(min: Int, max: Int): Var = newIntVar(Domain(min, max))
 
   def newIntVar(values: Iterable[Int]): Var = newIntVar(Domain(values.toList))

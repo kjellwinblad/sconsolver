@@ -17,6 +17,8 @@ trait Domain extends Iterable[Int] {
 
   val max: Int 
 
+  val value: Int 
+  
   def union(that: Domain): Domain
 
   def intersection(that: Domain): Domain
@@ -65,10 +67,17 @@ object Domain {
     new DomainImpl(ranges)
   }
 
-  def apply(domainValues: Int*): Domain = apply(domainValues.toList)
+  def apply(n:Int): Domain = apply(List(n))
+  def apply(): Domain = empty
+  //def apply(domainValues: Int*): Domain = apply(domainValues.toList)
 
-  private class DomainImpl(val domainRanges: List[Range]) extends Domain {
+  private class DomainImpl(domainRangesParam: List[Range]) extends Domain {
 
+	val domainRanges: List[Range] =domainRangesParam match{
+		case r::Nil if (r.isEmpty) => Nil
+		case d => d
+	}
+	  
     lazy val min = {
       require(domainRanges != Nil)
       domainRanges.first.min
@@ -77,6 +86,11 @@ object Domain {
     lazy val max = {
       require(domainRanges != Nil)
       domainRanges.last.max
+    }
+    
+    lazy val value = {
+    	require(this.fixPoint, "The domain needs to have a single value in order to have a value.")
+    	domainRanges.first.min
     }
  
     def union(that: Domain): Domain =
@@ -311,7 +325,10 @@ object Domain {
 
       }
     
-      def greaterThan(number:Int) = {
+      def greaterThan(number:Int) = 
+    	if(this.isEmpty)
+    	  this
+        else{
     	  
     	  val ranges =domainRanges.dropWhile((r)=>(r.max < number))
     	  
@@ -324,8 +341,11 @@ object Domain {
     	  
     	  
 
-      def lessThan(number:Int) = {
-    	  
+      def lessThan(number:Int) = 
+    	if(this.isEmpty)
+    	  this
+        else{
+
     	  val ranges =(domainRanges.takeWhile((r)=>(r.min < number))).reverse
     	  
     	  new DomainImpl((ranges match {
@@ -340,8 +360,12 @@ object Domain {
       def lessThanOrEqual(number:Int) = lessThan(number +1)
     
 
-      override def toString = "Domain(" + domainRanges.map((d)=>(""+(if(d.min == d.max) d.min 
-    		  									        else  d.min + " to " + d.max))).mkString(", ") + ")"
+      override def toString = 
+    	  if(isEmpty) 
+    	 	  "Domain()" 
+    	  else 
+    	 	  "Domain(" + domainRanges.map((d)=>(""+(if(d.min == d.max) d.min 
+    		  									     else  d.min + " to " + d.max))).mkString(", ") + ")"
       
     def domainWithSmallestMinFirst(that: Domain) = (this, that) match {
       case (Domain.empty, _) => (this, that)
@@ -370,7 +394,7 @@ object Domain {
         element
       }
 
-      def hasNext =  domainRanges.size > domainRangesPos
+      def hasNext =  (domainRanges.size > domainRangesPos && domainRanges.size!=0)
 
     }
 

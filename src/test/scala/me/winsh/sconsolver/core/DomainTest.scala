@@ -21,7 +21,7 @@ class DomainTest {
 
     //In order with holes
     {
-      val domain = Domain(1, 2, 3, 4, 10, 11, 12, 15, 16)
+      val domain = Domain(List(1, 2, 3, 4, 10, 11, 12, 15, 16))
 
       val iteratedVals = (for (intVal <- domain) yield intVal).toList
 
@@ -30,7 +30,7 @@ class DomainTest {
 
     //Out of order with holes
     {
-      val domain = Domain(10, 11, 1, 4, 12, 15, 16, 2, 3)
+      val domain = Domain(List(10, 11, 1, 4, 12, 15, 16, 2, 3))
 
       val iteratedVals = (for (intVal <- domain) yield intVal).toList
 
@@ -39,7 +39,7 @@ class DomainTest {
 
     //Out of order with holes and duplicates
     {
-      val domain = Domain(10, 10, 10, 11, 1, 4, 12, 15, 16, 2, 3, 1, 2)
+      val domain = Domain(List(10, 10, 10, 11, 1, 4, 12, 15, 16, 2, 3, 1, 2))
 
       val iteratedVals = (for (intVal <- domain) yield intVal).toList
 
@@ -59,11 +59,11 @@ class DomainTest {
   
   @Test
   def equals() = {
-	  assertEquals(Domain(1,2,3), Domain(1 to 3))
+	  assertEquals(Domain(List(1,2,3)), Domain(1 to 3))
 	  
-	  assertEquals(Domain(1,2,3,9,10,11), Domain((1 to 3).union(9 to 11)))
+	  assertEquals(Domain(List(1,2,3,9,10,11)), Domain((1 to 3).union(9 to 11)))
 	  
-	  assertTrue(Domain(1,2,3,4,9,10,11) != Domain((1 to 3).union(9 to 11)))
+	  assertTrue(Domain(List(1,2,3,4,9,10,11)) != Domain((1 to 3).union(9 to 11)))
   }
   
   @Test
