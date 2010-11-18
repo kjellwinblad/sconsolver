@@ -39,6 +39,8 @@ trait Domain extends Iterable[Int] {
   
   def fixPoint:Boolean = this.size==1
 	
+  def fixPoint(valueP:Int):Boolean = fixPoint && this.value == valueP
+  
   def failed:Boolean = this.isEmpty
 
 }

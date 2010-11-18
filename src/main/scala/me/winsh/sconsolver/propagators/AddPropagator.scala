@@ -6,7 +6,7 @@ class AddPropagator(val x: Var, val y: Var, val result: Var) extends Propagator 
 
   val parameters: List[Var] = List(x, y, result)
 
-  def propagate(s: Store) = {
+  def propagate(s: Store): (PropagatorMessage, Store) = {
 
     //x + y = z
 
@@ -16,24 +16,40 @@ class AddPropagator(val x: Var, val y: Var, val result: Var) extends Propagator 
 
     val zD = s(result)
 
-    if (xD.fixPoint && yD.fixPoint && zD.fixPoint && ((xD.value + yD.value) == zD.value))
+    if (subsumed(xD, yD, zD))
       (Subsumed(), s)
-    else {
-    	
+    else { 
+
       val newZD = zD.greaterThanOrEqual(xD.min + yD.min).lessThanOrEqual(xD.max + yD.max)
 
-      val newXD = xD.greaterThanOrEqual(zD.min - yD.max).lessThanOrEqual(zD.max - yD.min)
+      if (newZD.failed)
+        (Failed(), s(result, newZD))
+      else {
 
-      val newYD = yD.greaterThanOrEqual(zD.min - xD.max).lessThanOrEqual(zD.max - xD.min)
+        val newXD = xD.greaterThanOrEqual(newZD.min - yD.max).lessThanOrEqual(newZD.max - yD.min)
 
-      val newStore = s(x, newXD)(y, newYD)(result, newZD)
+        if (newXD.failed)
+          (Failed(), s(x, newXD)(result, newZD))
+        else {
 
-      if (newXD.failed || newYD.failed || newZD.failed)
-        (Failed(), newStore)
-      else
-        (NoFixPoint(), newStore)
+          val newYD = yD.greaterThanOrEqual(newZD.min - newXD.max).lessThanOrEqual(newZD.max - newXD.min)
+
+          val newStore = s(x, newXD)(y, newYD)(result, newZD)
+          
+          if (newYD.failed)
+            (Failed(), newStore)
+          else if (subsumed(newXD, newYD, newZD))
+        	  (Subsumed(), newStore)
+          else
+            (NoFixPoint(), newStore)
+            
+        }
+      }
     }
 
   }
+  
+  private def subsumed(x:Domain, y:Domain, z:Domain) =
+	  x.fixPoint && y.fixPoint && z.fixPoint && ((x.value + y.value) == z.value)
 
 }

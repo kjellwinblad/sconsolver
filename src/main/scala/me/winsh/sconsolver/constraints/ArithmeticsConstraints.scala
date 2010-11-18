@@ -18,5 +18,12 @@ trait ArithmeticsConstraints  extends Constraint{
 		
 		add(new SubPropagator(x,y, result))
 	}
+
+	def mult(x:Var, y:Var, result:Var):Propagator = {
+		 
+		checkRequirements(x, y)
+		
+		add(new MultPropagator(x,y, result))
+	}
 	
 }
