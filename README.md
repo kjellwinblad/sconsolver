@@ -26,7 +26,7 @@ Version 0.1 of SConSolver shall contain the following when it is released:
   * IsLessThan ((x <= y) == z)
   * Add (x + y == z) **DONE**
   * Sub (x - y == z) **DONE**
-  * Mult (x - y == z) **DONE**
+  * Mult (x * y == z) **DONE**
   * Div (x / y == z)
   * Modulo (x % y == z)
 

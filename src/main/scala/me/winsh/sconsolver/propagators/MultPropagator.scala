@@ -109,7 +109,12 @@ class MultPropagator(val x: Var, val y: Var, val result: Var) extends Propagator
       val mult1Max = (mult1MinMaxCandidates.tail.foldLeft(
         mult1MinMaxCandidates.head)((e1, e2) => e1.max(e2))).ceil.toInt
 
-      mult1D.greaterThanOrEqual(mult1Min).lessThanOrEqual(mult1Max)
+      val firstConstrain = mult1D.greaterThanOrEqual(mult1Min)
+      println(mult1D + " " + mult1Min + " " + mult1Max + " " + firstConstrain.size)
+      if(firstConstrain.isEmpty)
+    	  firstConstrain
+      else
+    	  firstConstrain.lessThanOrEqual(mult1Max)
 
     
 

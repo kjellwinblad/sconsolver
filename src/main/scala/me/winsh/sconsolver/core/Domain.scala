@@ -23,8 +23,10 @@ trait Domain extends Iterable[Int] {
 
   def intersection(that: Domain): Domain
 
+  def contains(number:Int):Boolean = ! this.intersection(Domain(number)).isEmpty
+  
   def difference(that: Domain): Domain
-
+  
   def onlyOneContains(that: Domain): Domain
 
   def domainWithSmallestMinFirst(that: Domain): (Domain, Domain)
@@ -332,7 +334,7 @@ object Domain {
     	  this
         else{
     	  
-    	  val ranges =domainRanges.dropWhile((r)=>(r.max < number))
+    	  val ranges =domainRanges.dropWhile((r)=>(r.max <= number))
     	  
     	  ranges match {
     	 	  case Nil => new DomainImpl(Nil) 
