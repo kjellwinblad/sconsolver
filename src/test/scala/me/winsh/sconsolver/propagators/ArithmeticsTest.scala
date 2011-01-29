@@ -1,6 +1,7 @@
 package me.winsh.sconsolver.propagators
 
 import me.winsh.sconsolver.core._
+import me.winsh.sconsolver.propagators._
 import org.junit._
 import Assert._
 
@@ -150,7 +151,7 @@ class ArithmeticsTest {
   }
 
   @Test
-  def mult {
+  def multTest1 {
 
     val simpleCSP = new CSPModel[Int] {
 
@@ -171,10 +172,15 @@ class ArithmeticsTest {
     val solutions = simpleCSP.findAllSolutions
 
     assertEquals(100, solutions.size)
- 
+
+  }
+
+  @Test
+  def multTest2 {
+
     val simpleCSP2 = new CSPModel[Int] {
 
-      val x = newIntVar(-1 to 1)
+      val x = newIntVar(0 to 1)
 
       val y = newIntVar(-1 to 1)
 
@@ -190,8 +196,13 @@ class ArithmeticsTest {
 
     val solutions2 = simpleCSP2.findAllSolutions
 
-    assertEquals(List(-1,-1):::List.fill(5)(0):::List(1,1), solutions2.sort(_ < _))
-    
+    assertEquals(List(-1) ::: List.fill(4)(0) ::: List(1), solutions2.sort(_ < _))
+
+  }
+
+  @Test
+  def multTest3 {
+
     val simpleCSP3 = new CSPModel[Int] {
 
       val x = newIntVar(-2 to 2)
@@ -208,9 +219,13 @@ class ArithmeticsTest {
       }
     }
 
+    val testStore = simpleCSP3.initialStore
+
+    val testProps = simpleCSP3.initialPropagators
+
     val solutions3 = simpleCSP3.findAllSolutions
 
-    assertEquals(List(-4, -4, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 4, 4), solutions3.sort(_ < _))
+    assertEquals(List(-4, -4, -2, -2, -2, -2, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 4, 4), solutions3.sort(_ < _))
 
   }
 
@@ -237,13 +252,9 @@ class ArithmeticsTest {
 
     assertTrue(solutions.isEmpty)
   }
-
-  
-  
-  
-  
-    @Test
-  def div {
+/*
+  @Test
+  def divTest1 {
 
     val simpleCSP = new CSPModel[Int] {
 
@@ -263,17 +274,19 @@ class ArithmeticsTest {
 
     val solutions = simpleCSP.findAllSolutions
     println(solutions)
-    assertEquals(100, solutions.size)
- 
+    assertEquals(27, solutions.size)
+  }
+  @Test
+  def divTest2 {
     val simpleCSP2 = new CSPModel[Int] {
 
       val x = newIntVar(-1 to 1)
 
       val y = newIntVar(-1 to 1)
 
-      val result = newIntVar(-1, 1)
+      val result = newIntVar(-1 to 1)
 
-      mult(x, y, result)
+      div(x, y, result)
 
       def solutionStoreToSolution(s: Store) = {
 
@@ -283,8 +296,12 @@ class ArithmeticsTest {
 
     val solutions2 = simpleCSP2.findAllSolutions
 
-    assertEquals(List(-1,-1):::List.fill(5)(0):::List(1,1), solutions2.sort(_ < _))
-    
+    assertEquals(List(-1, -1) ::: List.fill(2)(0) ::: List(1, 1), solutions2.sort(_ < _))
+
+  }
+*/
+  @Test
+  def divTest3 {
     val simpleCSP3 = new CSPModel[Int] {
 
       val x = newIntVar(-2 to 2)
@@ -293,7 +310,7 @@ class ArithmeticsTest {
 
       val result = newIntVar(-5, 5)
 
-      mult(x, y, result)
+      div(x, y, result)
 
       def solutionStoreToSolution(s: Store) = {
 
@@ -303,7 +320,7 @@ class ArithmeticsTest {
 
     val solutions3 = simpleCSP3.findAllSolutions
 
-    assertEquals(List(-4, -4, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 4, 4), solutions3.sort(_ < _))
+    assertEquals(List(-2, -2, -1, -1, -1, -1, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2), solutions3.sort(_ < _))
 
   }
 

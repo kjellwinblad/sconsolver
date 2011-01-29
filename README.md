@@ -27,7 +27,7 @@ Version 0.1 of SConSolver shall contain the following when it is released:
   * Add (x + y == z) **DONE**
   * Sub (x - y == z) **DONE**
   * Mult (x * y == z) **DONE**
-  * Div (x / y == z)
+  * Div (x / y == z) **DONE**
   * Modulo (x % y == z)
 
 * Logical propagators (Parameters are variables that can be 0 or 1):

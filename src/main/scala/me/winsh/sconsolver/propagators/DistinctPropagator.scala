@@ -40,9 +40,9 @@ class DistinctPropagator(val vars:List[Var], algorithmType:DistinctAlgorithmType
 		})
 		
 		if(newDomainList.exists((d)=>d._1.failed))
-			(Failed(), newStore)
+			(Failed, newStore)
 		else
-			(NoFixPoint(), newStore)
+			(NoFixPoint, newStore)
 
 	}
 }

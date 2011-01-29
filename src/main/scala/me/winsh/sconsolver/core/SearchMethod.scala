@@ -37,7 +37,7 @@ trait SearchMethod {
     }
 
   }
-
+ 
   def findAllSolutions[R](
     propagators: List[Propagator],
     store: Store,

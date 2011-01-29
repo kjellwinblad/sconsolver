@@ -2,13 +2,13 @@ package me.winsh.sconsolver.core
 
   abstract class PropagatorMessage
 
-  case class Subsumed extends PropagatorMessage
+  case object Subsumed extends PropagatorMessage
 
-  case class FixPoint extends PropagatorMessage
+  case object FixPoint extends PropagatorMessage
 
-  case class NoFixPoint extends PropagatorMessage
+  case object NoFixPoint extends PropagatorMessage
 
-  case class Failed extends PropagatorMessage
+  case object Failed extends PropagatorMessage
 
 trait Propagator {
 

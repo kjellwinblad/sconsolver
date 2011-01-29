@@ -16,9 +16,9 @@ class DivPropagator(val x: Var, val y: Var, val result: Var) extends Propagator 
     if(yD.contains(0)){
     	val newYD = yD.difference(Domain(0))
     	if(newYD.failed)
-    		(Failed(), s(y, newYD))
+    		(Failed, s(y, newYD))
     	else
-    		(NoFixPoint(), s(y, newYD))
+    		(NoFixPoint, s(y, newYD))
     }else
     	new MultPropagator(y, result, x).propagate(s)
     	

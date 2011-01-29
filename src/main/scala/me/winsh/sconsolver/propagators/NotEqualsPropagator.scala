@@ -22,11 +22,11 @@ class NotEqualsPropagator(val x:Var,val y:Var) extends Propagator{
 		val newStore = s(x, newDomainX)(y, newDomainY)
 		
 		if(newDomainX.failed || newDomainY.failed)
-			(Failed(), newStore)
+			(Failed, newStore)
 		else if(newDomainX.intersection(newDomainY).isEmpty)
-			(Subsumed(), newStore)
+			(Subsumed, newStore)
 		else
-			(FixPoint(), newStore)
+			(FixPoint, newStore)
 
 	}
 	

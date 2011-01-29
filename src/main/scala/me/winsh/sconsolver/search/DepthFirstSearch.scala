@@ -13,8 +13,6 @@ object DepthFirstSearch extends SearchMethod {
     constrain: (Store) => (List[Propagator], List[(Var, Domain)]) = ((s: Store) => (Nil, Nil))): List[R] = {
 
     case class EnoughSolutionsException(solutions: List[R]) extends Exception
-
-    var test = 0;
     
     def findInter(
       propagators: List[Propagator],
@@ -32,7 +30,7 @@ object DepthFirstSearch extends SearchMethod {
         else {
 
           val (constrainPropagatos, newVarsWithDomain) = constrain(newStore1)
-
+          
           (f(resultSoFar, newStore1),
             numberOfSolutions - 1,
             (constrainPropagatos, newVarsWithDomain))

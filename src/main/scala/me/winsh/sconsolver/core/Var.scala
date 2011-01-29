@@ -2,7 +2,7 @@ package me.winsh.sconsolver.core
 
 trait Var {
 
-	val id:Int
+	val id:Long
 	
 	override def equals (that: Any) = that.asInstanceOf[Var].id == this.id
 	
@@ -29,7 +29,7 @@ object Var {
 
   }
 	
-	private class VarImpl(idP:Int) extends Var {
+	private class VarImpl(idP:Long) extends Var {
 		
 		val id = idP
 

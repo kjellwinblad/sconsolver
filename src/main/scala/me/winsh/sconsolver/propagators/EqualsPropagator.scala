@@ -19,11 +19,11 @@ class EqualsPropagator(val x:Var,val y:Var) extends Propagator{
 		val newStore = s(x, newDomainX)(y, newDomainY)
 		
 		if(newDomainX.failed || newDomainY.failed)
-			(Failed(), newStore)
+			(Failed, newStore)
 		if(newDomainX.fixPoint || newDomainY.fixPoint)
-			(Subsumed(), newStore)
+			(Subsumed, newStore)
 		else
-			(FixPoint(), newStore)
+			(FixPoint, newStore)
 
 	}
 	

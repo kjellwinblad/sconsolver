@@ -25,11 +25,11 @@ object Propagate {
 				val(propMessage, newS) = prop.propagate(s)
 				
 				val (newSubsumedProps, newSleepingProps1, newProps1) =  propMessage match {
-					case Subsumed() => (prop::subsumedProps, sleepingProps, propsRest)
-					case FixPoint() => (subsumedProps, prop::sleepingProps, propsRest) 
-					case NoFixPoint() if(s==newS)=> (subsumedProps, sleepingProps, propsRest)
-					case NoFixPoint() => (subsumedProps, sleepingProps, props)
-					case Failed() => (subsumedProps, sleepingProps, propsRest) 
+					case Subsumed => (prop::subsumedProps, sleepingProps, propsRest)
+					case FixPoint => (subsumedProps, prop::sleepingProps, propsRest) 
+					case NoFixPoint if(s==newS)=> (subsumedProps, sleepingProps, propsRest)
+					case NoFixPoint => (subsumedProps, sleepingProps, props)
+					case Failed => (subsumedProps, sleepingProps, propsRest) 
 				}
 				
 				val changedVars = s.changedVars(newS)
