@@ -4,12 +4,13 @@ import me.winsh.sconsolver.core._
 import me.winsh.sconsolver.search._
 import me.winsh.sconsolver.branchings.value._
 import me.winsh.sconsolver.branchings.variable._
-import org.junit._
-import Assert._
+import org.scalatest.junit.AssertionsForJUnit
+import org.junit.Assert._
+import org.junit.Test
 
 class DepthFirstSearchTest {
 
-  @Test
+  @Test 
   def severalSolutionsTest {
 
     val simpleModel = new CSPModel[Int] {

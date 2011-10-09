@@ -4,14 +4,14 @@ import me.winsh.sconsolver.core._
 
 abstract class DistinctAlgorithmType
 
-case class Naive extends DistinctAlgorithmType
+case object Naive extends DistinctAlgorithmType
 
-class DistinctPropagator(val vars:List[Var], algorithmType:DistinctAlgorithmType = Naive()) extends Propagator{
+class DistinctPropagator(val vars:List[Var], algorithmType:DistinctAlgorithmType = Naive) extends Propagator{
 	
 	val parameters:List[Var] = vars  
 	
 	def propagate(s:Store) = algorithmType match {
-		case Naive() =>  propagateNaive(s)
+		case Naive =>  propagateNaive(s)
 	}
 	
 	private def propagateNaive(s:Store) = {

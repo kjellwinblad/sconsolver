@@ -52,7 +52,7 @@ class ArithmeticsTest {
     val solutions2 = simpleCSP2.findAllSolutions
 
     assertEquals(List(-4, -3, -3, -2, -2, -2, -1, -1, -1, -1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4),
-      solutions2.sort(_ < _))
+      solutions2.sortWith(_ < _))
   }
 
   @Test
@@ -123,7 +123,7 @@ class ArithmeticsTest {
     val solutions2 = simpleCSP2.findAllSolutions
 
     assertEquals(List(-4, -3, -3, -2, -2, -2, -1, -1, -1, -1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4),
-      solutions2.sort(_ < _))
+      solutions2.sortWith(_ < _))
   }
 
   @Test
@@ -196,7 +196,7 @@ class ArithmeticsTest {
 
     val solutions2 = simpleCSP2.findAllSolutions
 
-    assertEquals(List(-1) ::: List.fill(4)(0) ::: List(1), solutions2.sort(_ < _))
+    assertEquals(List(-1) ::: List.fill(4)(0) ::: List(1), solutions2.sortWith(_ < _))
 
   }
 
@@ -225,7 +225,7 @@ class ArithmeticsTest {
 
     val solutions3 = simpleCSP3.findAllSolutions
 
-    assertEquals(List(-4, -4, -2, -2, -2, -2, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 4, 4), solutions3.sort(_ < _))
+    assertEquals(List(-4, -4, -2, -2, -2, -2, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 4, 4), solutions3.sortWith(_ < _))
 
   }
 
@@ -320,7 +320,7 @@ class ArithmeticsTest {
 
     val solutions3 = simpleCSP3.findAllSolutions
 
-    assertEquals(List(-2, -2, -1, -1, -1, -1, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2), solutions3.sort(_ < _))
+    assertEquals(List(-2, -2, -1, -1, -1, -1, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2), solutions3.sortWith(_ < _))
 
   }
 

@@ -100,9 +100,9 @@ trait ConstraintSatisfactionProblemModel[R]
 	  
 	  constrain(s)
 	  
-	  val varListToReturn = this.variableList  -- varListBeforeConstrain
+	  val varListToReturn = this.variableList  filterNot (varListBeforeConstrain contains)
 	  
-	  val propagatorListToReturn = this.propagatorList -- propagatorListBeforeConstrain
+	  val propagatorListToReturn = this.propagatorList filterNot (propagatorListBeforeConstrain contains)
 	  
 	  //Reset
 	  

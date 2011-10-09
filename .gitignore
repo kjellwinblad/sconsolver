@@ -1,4 +1,8 @@
-/target
-lift_proto*
-.scala_dependencies
-
+.target
+target
+.settings
+.project
+.classpath
+.cache
+project/target
+project/project

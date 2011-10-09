@@ -59,7 +59,7 @@ object Domain {
 
   def apply(domainValues: Iterable[Int]): Domain = {
 
-    val domainValuesList = domainValues.toList.sort(_ < _)
+    val domainValuesList = domainValues.toList.sortWith(_ < _)
 
     val ranges = domainValuesList.foldLeft(Nil: List[Range])((rangesList, value) => rangesList match {
       case Nil => List(value to value)
@@ -84,7 +84,7 @@ object Domain {
 	  
     lazy val min = {
       require(domainRanges != Nil)
-      domainRanges.first.min
+      domainRanges.head.min
     }
 
     lazy val max = {
@@ -94,7 +94,7 @@ object Domain {
     
     lazy val value = {
     	require(this.fixPoint, "The domain needs to have a single value in order to have a value.")
-    	domainRanges.first.min
+    	domainRanges.head.min
     }
  
     def union(that: Domain): Domain =
@@ -148,7 +148,7 @@ object Domain {
           case (smallestMinDomain, bigestMinDomain) => {
             val checkRanges = smallestMinDomain.domainRanges
 
-            val firstInBigestMinDomain = bigestMinDomain.domainRanges.first
+            val firstInBigestMinDomain = bigestMinDomain.domainRanges.head
 
             val checkedRanges =
               checkRanges.dropWhile((range) => range.min < firstInBigestMinDomain.min &&
@@ -262,7 +262,7 @@ object Domain {
           case (smallestMinDomain, bigestMinDomain) => {
             val checkRanges = smallestMinDomain.domainRanges
 
-            val firstInBigestMinDomain = bigestMinDomain.domainRanges.first
+            val firstInBigestMinDomain = bigestMinDomain.domainRanges.head
 
             val (differ, mayDiffer) =
               checkRanges.span((range) => range.min < firstInBigestMinDomain.min &&
@@ -288,7 +288,7 @@ object Domain {
                   case (r1, r2) => (r1.max.min(r2.max) + 1 to r1.max.max(r2.max)) :: (r1.min.min(r2.min) to r1.min.max(r2.min) - 1) :: Nil
                 }
 
-                val maxNewResultRange = newResultRanges.first
+                val maxNewResultRange = newResultRanges.head
                 //Do recursive call with the intersecting range droped in in
                 //firstElementIntersectingRanges and in bigestMinDomain
 
@@ -443,4 +443,3 @@ object Domain {
  * @author Kjell Winblad
  *
  */
-
