@@ -29,7 +29,7 @@ class SubPropagator(val x: Var, val y: Var, val result: Var) extends Propagator 
         val newXD = xD.greaterThanOrEqual(newZD.min + yD.min).lessThanOrEqual(newZD.max + yD.max)
 
         if (newXD.failed)
-          (Failed, s(x,newXD)(result, newZD))
+          (Failed, s(x, newXD)(result, newZD))
         else {
 
           val newYD = yD.greaterThanOrEqual(newXD.min - newZD.max).lessThanOrEqual(newXD.max - newZD.min)
@@ -39,10 +39,10 @@ class SubPropagator(val x: Var, val y: Var, val result: Var) extends Propagator 
           if (newYD.failed)
             (Failed, newStore)
           else if (subsumed(newXD, newYD, newZD))
-        	  (Subsumed, newStore)
+            (Subsumed, newStore)
           else
             (NoFixPoint, newStore)
-            
+
         }
       }
     }

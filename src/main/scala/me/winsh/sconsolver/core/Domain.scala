@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package me.winsh.sconsolver.core
 
@@ -15,35 +15,35 @@ trait Domain extends Iterable[Int] {
 
   val min: Int
 
-  val max: Int 
+  val max: Int
 
-  val value: Int 
-  
+  val value: Int
+
   def union(that: Domain): Domain
 
   def intersection(that: Domain): Domain
 
-  def contains(number:Int):Boolean = ! this.intersection(Domain(number)).isEmpty
-  
+  def contains(number: Int): Boolean = !this.intersection(Domain(number)).isEmpty
+
   def difference(that: Domain): Domain
-  
+
   def onlyOneContains(that: Domain): Domain
 
   def domainWithSmallestMinFirst(that: Domain): (Domain, Domain)
-  
-  def greaterThan(number:Int):Domain
 
-  def lessThan(number:Int):Domain
+  def greaterThan(number: Int): Domain
 
-  def greaterThanOrEqual(number:Int):Domain
+  def lessThan(number: Int): Domain
 
-  def lessThanOrEqual(number:Int):Domain
-  
-  def fixPoint:Boolean = this.size==1
-	
-  def fixPoint(valueP:Int):Boolean = fixPoint && this.value == valueP
-  
-  def failed:Boolean = this.isEmpty
+  def greaterThanOrEqual(number: Int): Domain
+
+  def lessThanOrEqual(number: Int): Domain
+
+  def fixPoint: Boolean = this.size == 1
+
+  def fixPoint(valueP: Int): Boolean = fixPoint && this.value == valueP
+
+  def failed: Boolean = this.isEmpty
 
 }
 
@@ -71,17 +71,17 @@ object Domain {
     new DomainImpl(ranges)
   }
 
-  def apply(n:Int): Domain = apply(List(n))
+  def apply(n: Int): Domain = apply(List(n))
   def apply(): Domain = empty
   //def apply(domainValues: Int*): Domain = apply(domainValues.toList)
 
   private class DomainImpl(domainRangesParam: List[Range]) extends Domain {
 
-	val domainRanges: List[Range] =domainRangesParam match{
-		case r::Nil if (r.isEmpty) => Nil
-		case d => d
-	}
-	  
+    val domainRanges: List[Range] = domainRangesParam match {
+      case r :: Nil if (r.isEmpty) => Nil
+      case d => d
+    }
+
     lazy val min = {
       require(domainRanges != Nil)
       domainRanges.head.min
@@ -91,22 +91,22 @@ object Domain {
       require(domainRanges != Nil)
       domainRanges.last.max
     }
-    
+
     lazy val value = {
-    	require(this.fixPoint, "The domain needs to have a single value in order to have a value.")
-    	domainRanges.head.min
+      require(this.fixPoint, "The domain needs to have a single value in order to have a value.")
+      domainRanges.head.min
     }
- 
+
     def union(that: Domain): Domain =
-      if(this.isEmpty)
-    	  that
-      else if(that.isEmpty)
-    	  this 
+      if (this.isEmpty)
+        that
+      else if (that.isEmpty)
+        this
       else if (this.max < that.min)
         new DomainImpl(concatenateOrderedRangesIfAdjecent(this.domainRanges ++ that.domainRanges))
       else if (that.max < this.min)
         new DomainImpl(concatenateOrderedRangesIfAdjecent(that.domainRanges ++ this.domainRanges))
-      else { 
+      else {
 
         def union(subtractFrom: List[Range],
           subtract: List[Range],
@@ -328,49 +328,46 @@ object Domain {
         onlyOneContains(this.domainWithSmallestMinFirst(that), Nil)
 
       }
-    
-      def greaterThan(number:Int) = 
-    	if(this.isEmpty)
-    	  this
-        else{
-    	  
-    	  val ranges =domainRanges.dropWhile((r)=>(r.max <= number))
-    	  
-    	  ranges match {
-    	 	  case Nil => new DomainImpl(Nil) 
-    	 	  case e::rest if( e.min > number) => new DomainImpl(e::rest)
-    	 	  case e::rest => new DomainImpl((number +1 to e.max)::rest) 
-    	  }
-      }
-    	  
-    	  
 
-      def lessThan(number:Int) = 
-    	if(this.isEmpty)
-    	  this
-        else{
+    def greaterThan(number: Int) =
+      if (this.isEmpty)
+        this
+      else {
 
-    	  val ranges =(domainRanges.takeWhile((r)=>(r.min < number))).reverse
-    	  
-    	  new DomainImpl((ranges match {
-    	 	  case Nil => Nil 
-    	 	  case e::rest if( e.max < number) => e::rest
-    	 	  case e::rest => (e.min to number -1)::rest
-    	  }).reverse)
+        val ranges = domainRanges.dropWhile((r) => (r.max <= number))
+
+        ranges match {
+          case Nil => new DomainImpl(Nil)
+          case e :: rest if (e.min > number) => new DomainImpl(e :: rest)
+          case e :: rest => new DomainImpl((number + 1 to e.max) :: rest)
+        }
       }
 
-      def greaterThanOrEqual(number:Int) = greaterThan(number - 1)
+    def lessThan(number: Int) =
+      if (this.isEmpty)
+        this
+      else {
 
-      def lessThanOrEqual(number:Int) = lessThan(number +1)
-    
+        val ranges = (domainRanges.takeWhile((r) => (r.min < number))).reverse
 
-      override def toString = 
-    	  if(isEmpty) 
-    	 	  "Domain()" 
-    	  else 
-    	 	  "Domain(" + domainRanges.map((d)=>(""+(if(d.min == d.max) d.min 
-    		  									     else  d.min + " to " + d.max))).mkString(", ") + ")"
-      
+        new DomainImpl((ranges match {
+          case Nil => Nil
+          case e :: rest if (e.max < number) => e :: rest
+          case e :: rest => (e.min to number - 1) :: rest
+        }).reverse)
+      }
+
+    def greaterThanOrEqual(number: Int) = greaterThan(number - 1)
+
+    def lessThanOrEqual(number: Int) = lessThan(number + 1)
+
+    override def toString =
+      if (isEmpty)
+        "Domain()"
+      else
+        "Domain(" + domainRanges.map((d) => ("" + (if (d.min == d.max) d.min
+        else d.min + " to " + d.max))).mkString(", ") + ")"
+
     def domainWithSmallestMinFirst(that: Domain) = (this, that) match {
       case (Domain.empty, _) => (this, that)
       case (_, Domain.empty) => (this, that)
@@ -398,7 +395,7 @@ object Domain {
         element
       }
 
-      def hasNext =  (domainRanges.size > domainRangesPos && domainRanges.size!=0)
+      def hasNext = (domainRanges.size > domainRangesPos && domainRanges.size != 0)
 
     }
 
@@ -439,7 +436,3 @@ object Domain {
 
 }
 
-/**
- * @author Kjell Winblad
- *
- */

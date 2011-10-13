@@ -6,13 +6,12 @@ package object core {
 
   def getNextVarIdAndIncreaseCounter() = {
     synchronized {
-    	
+
       varIdCounter = varIdCounter + 1
 
       varIdCounter
-    
+
     }
   }
-  
 
 }

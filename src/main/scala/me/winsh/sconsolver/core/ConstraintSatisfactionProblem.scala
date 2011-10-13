@@ -11,17 +11,14 @@ trait BasicCSPModel extends ConstraintSatisfactionProblemModel[Store] {
 
   def solutionStoreToSolution(s: Store) = s
 
-
 }
 
 trait CSPModel[R] extends ConstraintSatisfactionProblemModel[R] {
 
-
 }
 
 trait ConstraintSatisfactionProblemModel[R]
-  extends IntRelationConstraints with DistinctConstraint with ArithmeticsConstraints{
-
+  extends IntRelationConstraints with DistinctConstraint with ArithmeticsConstraints {
 
   //Domain Specific Language State
   //==============================
@@ -29,18 +26,18 @@ trait ConstraintSatisfactionProblemModel[R]
   private var variableList = List[(Var, Domain)]()
 
   private var propagatorList = List[Propagator]()
-	
+
   //Configurations
   //==============
 
-  def solutionStoreToSolution(s:Store):R
+  def solutionStoreToSolution(s: Store): R
 
   var branching: Branching = Branching(FirstUnassigned, MinValue)
-  
-  var searchMethod:SearchMethod = DepthFirstSearch
 
-  def constrain(s:Store):Unit = require(false,"The constrain(s:Store) method need to be defined in the model in order to call findBestSolution")
-  
+  var searchMethod: SearchMethod = DepthFirstSearch
+
+  def constrain(s: Store): Unit = require(false, "The constrain(s:Store) method need to be defined in the model in order to call findBestSolution")
+
   //Convenience Methods
   //===================
 
@@ -57,7 +54,7 @@ trait ConstraintSatisfactionProblemModel[R]
       initialStore,
       branching,
       solutionStoreToSolution)
-      
+
   def findAllSolutions: List[R] =
     searchMethod.findAllSolutions(
       initialPropagators,
@@ -72,7 +69,7 @@ trait ConstraintSatisfactionProblemModel[R]
       branching,
       constrainTransformation,
       solutionStoreToSolution)
-      
+
   //Domain Specific Language
   //========================
 
@@ -91,30 +88,30 @@ trait ConstraintSatisfactionProblemModel[R]
     propagator
 
   }
-  
-  private def constrainTransformation(s:Store):(List[Propagator], List[(Var,Domain)]) = {
-    	
-	  val varListBeforeConstrain = this.variableList 
-	  
-	  val propagatorListBeforeConstrain = this.propagatorList
-	  
-	  constrain(s)
-	  
-	  val varListToReturn = this.variableList  filterNot (varListBeforeConstrain contains)
-	  
-	  val propagatorListToReturn = this.propagatorList filterNot (propagatorListBeforeConstrain contains)
-	  
-	  //Reset
-	  
-	  this.variableList = varListBeforeConstrain
-	  
-	  this.propagatorList = propagatorListBeforeConstrain
-	  
-	  (propagatorListToReturn, varListToReturn)
-	   
+
+  private def constrainTransformation(s: Store): (List[Propagator], List[(Var, Domain)]) = {
+
+    val varListBeforeConstrain = this.variableList
+
+    val propagatorListBeforeConstrain = this.propagatorList
+
+    constrain(s)
+
+    val varListToReturn = this.variableList filterNot (varListBeforeConstrain contains)
+
+    val propagatorListToReturn = this.propagatorList filterNot (propagatorListBeforeConstrain contains)
+
+    //Reset
+
+    this.variableList = varListBeforeConstrain
+
+    this.propagatorList = propagatorListBeforeConstrain
+
+    (propagatorListToReturn, varListToReturn)
+
   }
 
-    //IntVar declarations
+  //IntVar declarations
 
   def newIntVar(d: Domain): Var = {
 
@@ -124,9 +121,9 @@ trait ConstraintSatisfactionProblemModel[R]
 
     newVar
   }
-  
+
   def newIntVar(): Var = newIntVar(-10000000, 10000000)
-  
+
   def newIntVar(min: Int, max: Int): Var = newIntVar(Domain(min, max))
 
   def newIntVar(values: Iterable[Int]): Var = newIntVar(Domain(values.toList))

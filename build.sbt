@@ -2,7 +2,7 @@ name := "SconSolver"
 
 organization := "me.winsh"
 
-version := "2.8.1.final"
+version := "2.9.1"
 
 scalacOptions ++= Seq("-deprecation")
 

@@ -18,23 +18,23 @@ class MultPropagator(val x: Var, val y: Var, val result: Var) extends Propagator
 
     if (subsumed(xD, yD, zD))
       (Subsumed, s)
-    else if (xD.fixPoint(0)) {//x=0
+    else if (xD.fixPoint(0)) { //x=0
 
       val newZD = zD.intersection(xD)
 
       (ifZEmptyFailedElseSubsumed(newZD), s(result, newZD))
 
-    } else if (yD.fixPoint(0)) {//y=0
+    } else if (yD.fixPoint(0)) { //y=0
 
       val newZD = zD.intersection(yD)
 
       (ifZEmptyFailedElseSubsumed(newZD), s(result, newZD))
 
-    } else if (zD.fixPoint(0) && ! xD.contains(0) && ! yD.contains(0)) {//z=0
+    } else if (zD.fixPoint(0) && !xD.contains(0) && !yD.contains(0)) { //z=0
 
       (Failed, s(x, Domain.empty)(y, Domain.empty))
 
-    } else if (zD.contains(0) && ! xD.contains(0) && ! yD.contains(0)) {
+    } else if (zD.contains(0) && !xD.contains(0) && !yD.contains(0)) {
 
       (NoFixPoint, s(result, zD.difference(Domain(0))))
 
@@ -56,8 +56,8 @@ class MultPropagator(val x: Var, val y: Var, val result: Var) extends Propagator
           (Failed, newStore)
         else if (subsumed(newXD, newYD, newZD))
           (Subsumed, newStore)
-       // else if (newXD!=xD || newYD!=yD)
-       //   (NoFixPoint, newStore) Must Implement equals on domain
+        // else if (newXD!=xD || newYD!=yD)
+        //   (NoFixPoint, newStore) Must Implement equals on domain
         else
           (NoFixPoint, newStore)
 
@@ -71,7 +71,7 @@ class MultPropagator(val x: Var, val y: Var, val result: Var) extends Propagator
 
   private def ifZEmptyFailedElseSubsumed(dom: Domain) =
     if (dom.failed) Failed else Subsumed
-    
+
   private def constrainZ(xD: Domain, yD: Domain, zD: Domain) = {
 
     val zMinMaxCandidates = for {
@@ -87,30 +87,28 @@ class MultPropagator(val x: Var, val y: Var, val result: Var) extends Propagator
 
   }
 
+  private def constrainMult1(mult1D: Domain, mult2D: Domain, zD: Domain) =
+    if (mult2D.contains(0))
+      mult1D
+    else {
 
+      val mult1MinMaxCandidates =
+        for {
+          mult2 <- mult2D;
+          z <- List(zD.min, zD.max)
+        } yield z / mult2
 
-  private def constrainMult1(mult1D: Domain, mult2D: Domain, zD: Domain) = 
-  	if(mult2D.contains(0))
-  		mult1D
-  	else {  
-	  
-    val mult1MinMaxCandidates =
-      for {
-        mult2 <- mult2D;
-        z <- List(zD.min, zD.max)
-      } yield z / mult2
+      val mult1Min = mult1MinMaxCandidates.min.floor.toInt
 
-    val mult1Min = mult1MinMaxCandidates.min.floor.toInt
+      val mult1Max = mult1MinMaxCandidates.max.ceil.toInt
 
-    val mult1Max = mult1MinMaxCandidates.max.ceil.toInt
+      val firstConstrain = mult1D.greaterThanOrEqual(mult1Min)
 
-    val firstConstrain = mult1D.greaterThanOrEqual(mult1Min)
+      if (firstConstrain.isEmpty)
+        firstConstrain
+      else
+        firstConstrain.lessThanOrEqual(mult1Max)
 
-    if (firstConstrain.isEmpty)
-      firstConstrain
-    else
-      firstConstrain.lessThanOrEqual(mult1Max)
-
-  }
+    }
 
 }
