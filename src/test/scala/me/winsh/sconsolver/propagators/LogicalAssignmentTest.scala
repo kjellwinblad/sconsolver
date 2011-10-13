@@ -8,30 +8,70 @@ import Assert._
 class LogicalAssignmentTest {
 
   @Test
-  def equalSuccessTest {
+  def equalsNotTrueTest{
 
     val simpleCSP = new BasicCSPModel {
 
       val x = newIntVar(5 to 15)
-
-      val y = c(8)
-
-      x === y
+      val y = newIntVar(16 to 20)
+      val z = newBoolVar()
+      
+      isEqual(x,y,z)
 
       val s = initialStore
-
       val p = initialPropagators
-
       val (newP, newS) = Propagate.propagate(p, s)
 
-      assertEquals(Domain(8), newS(x))
-
-      assertEquals(Domain(8), newS(y))
-
+      assertEquals(newP, Nil)
+      assertEquals(Domain(0), newS(z))
       assertTrue(newP.isEmpty)
 
     }
 
   }
 
+  @Test
+  def equalsTrueTest{
+
+    val simpleCSP = new BasicCSPModel {
+
+      val x = c(1)
+      val y = c(1)
+      val z = newBoolVar()
+      
+      isEqual(x,y,z)
+
+      val s = initialStore
+      val p = initialPropagators
+      val (newP, newS) = Propagate.propagate(p, s)
+
+      assertEquals(newP, Nil)
+      assertEquals(Domain(1), newS(z))
+      assertTrue(newP.isEmpty)
+
+    }
+
+  }
+  
+  @Test
+  def solutionTest{
+
+    val simpleCSP = new BasicCSPModel {
+
+      val x = newIntVar(1 to 2)
+      val y = newIntVar(2 to 3)
+      val z = newBoolVar()
+      
+      isEqual(x,y,z)
+    }
+    
+    simpleCSP.findAllSolutions.foreach((solution)=>{
+      val x = solution(simpleCSP.x).value
+      val y = solution(simpleCSP.y).value
+      val z = if(solution(simpleCSP.z).value==1)true else false
+      assert((x==y)==z)
+    })
+
+  }
+  
 }

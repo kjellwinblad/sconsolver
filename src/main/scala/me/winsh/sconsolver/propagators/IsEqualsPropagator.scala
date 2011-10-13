@@ -8,17 +8,21 @@ class IsEqualsPropagator(val x: Var, val y: Var, val z: Var) extends Propagator 
 
   def propagate(s: Store) = {
 
+    val xDomain = s(x)
+    val yDomain = s(y)
     val zDomain = s(z)
 
     if (zDomain.fixPoint(1))
       new EqualsPropagator(x, y).propagate(s)
     else if (zDomain.fixPoint(0))
       new NotEqualsPropagator(x, y).propagate(s)
-    else {
-
-      val xDomain = s(x)
-
-      val yDomain = s(y)
+    else if (xDomain.fixPoint && yDomain.fixPoint && xDomain.value == yDomain.value) {
+      val newDomainZ = zDomain.difference(Domain(0))
+      if (newDomainZ.isEmpty)
+        (Failed, s(z, newDomainZ))
+      else
+        (Subsumed, s(z, newDomainZ))
+    } else {
 
       val intersection = xDomain.intersection(yDomain)
 

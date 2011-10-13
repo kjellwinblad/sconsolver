@@ -40,6 +40,13 @@ trait IntRelationConstraints extends Constraint {
 
     add(new EqualsPropagator(x, y))
   }
+  
+  def isEqual(x: Var, y: Var, z:Var) = {
+
+    checkRequirements(List(x, y, z))
+
+    add(new IsEqualsPropagator(x, y, z))
+  }
 
   def notEqual(x: Var, y: Var) = {
 
