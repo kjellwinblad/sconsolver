@@ -20,10 +20,9 @@ Version 0.1 of SConSolver shall contain the following when it is released:
   * NotEquals (x != y) **DONE**
   * LessThanOrEqual (x <= y) **DONE**
   * LessThan (x <= y) **DONE**
-  * IsEquals ((x == y) == z) **DONE**
-  * IsNotEquals ((x != y) == z)
-  * IsLessThanOrEqual ((x <= y) == z)
-  * IsLessThan ((x <= y) == z)
+  * IsEqual ((x == y) == z) **DONE**
+  * IsNotEqual ((x != y) == z) **DONE**
+  * IsLessThan ((x < y) == z) **DONE**
   * Add (x + y == z) **DONE**
   * Sub (x - y == z) **DONE**
   * Mult (x * y == z) **DONE**

@@ -2,31 +2,35 @@ package me.winsh.sconsolver.propagators
 
 import me.winsh.sconsolver.core._
 
-class IsNotEqualsPropagator(val x: Var, val y: Var) extends Propagator {
+class IsNotEqualsPropagator(val x: Var, val y: Var, val z: Var) extends Propagator {
 
-  val parameters: List[Var] = List(x, y)
+  val parameters: List[Var] = List(x, y, z)
 
   def propagate(s: Store) = {
 
     val xDomain = s(x)
-
     val yDomain = s(y)
+    val zDomain = s(z)
 
-    def single(d: Domain) = if (d.fixPoint) d else Domain()
+    if (zDomain.fixPoint(1))
+      new NotEqualsPropagator(x, y).propagate(s)
+    else if (zDomain.fixPoint(0))
+      new EqualsPropagator(x, y).propagate(s)
+    else if (xDomain.fixPoint && yDomain.fixPoint && xDomain.value == yDomain.value) {
+      val newDomainZ = zDomain.difference(Domain(1))
+      if (newDomainZ.isEmpty)
+        (Failed, s(z, newDomainZ))
+      else
+        (Subsumed, s(z, newDomainZ))
+    } else {
 
-    val newDomainX = xDomain.difference(single(yDomain))
+      val intersection = xDomain.intersection(yDomain)
 
-    val newDomainY = yDomain.difference(single(xDomain))
-
-    val newStore = s(x, newDomainX)(y, newDomainY)
-
-    if (newDomainX.failed || newDomainY.failed)
-      (Failed, newStore)
-    else if (newDomainX.intersection(newDomainY).isEmpty)
-      (Subsumed, newStore)
-    else
-      (FixPoint, newStore)
-
+      intersection.isEmpty match {
+        case true => (Subsumed, s(z, Domain(1)))
+        case false => (FixPoint, s)
+      }
+    }
   }
 
 }
