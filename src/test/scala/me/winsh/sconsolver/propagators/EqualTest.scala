@@ -17,7 +17,7 @@ class EqualTest {
 			
 			val y =  c(8)
 			
-			x === y
+			satisfy(x === y)
 			
 			val s = initialStore
 			
@@ -49,7 +49,7 @@ class EqualTest {
 			
 			val y =  newIntVar(40 to 50)
 			
-			x === y
+			satisfy(x === y)
 			
 			val s = initialStore
 			

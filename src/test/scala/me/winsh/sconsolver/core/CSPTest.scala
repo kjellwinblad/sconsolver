@@ -37,10 +37,12 @@ class CSPTest {
 			
 			val y:Var =  newIntVar(1 to 10)
 			
-			x <= y
+			val variable1 = x <= y
+			satisfy(variable1)
 			
 			val constant = c(7)
-			y <= constant
+			val variable2 = y <= constant
+			satisfy(variable2)
 			
 			val s = initialStore
 			
@@ -48,9 +50,9 @@ class CSPTest {
 			
 			val (newP, newS) = Propagate.propagate(p, s)
 					
-			assertTrue(newP.toSet.contains(new LessThanOrEqualPropagator(x,y)))
+			assertTrue(newP.toSet.contains(new IsLessThanAndLessThanOrEqualPropagator(x,y,variable1,lessThan=false)))
 			
-			assertFalse(newP.toSet.contains(new LessThanOrEqualPropagator(y,constant)))
+			assertFalse(newP.toSet.contains(new IsLessThanAndLessThanOrEqualPropagator(y,constant,variable2,lessThan=false)))
 			
 			assertEquals(Domain(5 to 7), newS(x))
 			
@@ -69,9 +71,9 @@ class CSPTest {
 			
 			val y =  newIntVar(1 to 10)
 			
-			x <= y
+			satisfy(x <= y)
 			
-			y <= (7:Var)
+			satisfy(y <= (7:Var))
 			
 		}
 		

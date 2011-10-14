@@ -43,11 +43,11 @@ Version 0.1 of SConSolver shall contain the following when it is released:
 
 * A framework for extending the system with new propagators search methods etc **90% DONE**
 
-* A Domain Specific Language for Constraint Programming **50% DONE**
+* A Domain Specific Language for Constraint Programming **70% DONE**
 
 * Examples:
   * A sudoku solver **70% DONE**
-  * Solver for the SEND + MORE + MONEY problem
+  * Solver for the SEND + MORE + MONEY problem **70% DONE**
 
 * Some documentation for the most basic classes
 

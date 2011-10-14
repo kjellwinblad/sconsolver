@@ -21,9 +21,9 @@ class DepthFirstSearchTest {
 
       val x = newIntVar((4 to 7).union(1 to 2).union(10 to 11))
  
-      x !== c(5)
+      satisfy(x !== c(5))
 
-      x < c(7)
+      satisfy(x < c(7))
 
       def solutionStoreToSolution(s: Store) = s(x).min
 
@@ -53,11 +53,11 @@ class DepthFirstSearchTest {
 
       val x = newIntVar((4 to 6).union(1 to 2).union(10 to 11))
 
-      x !== c(5)
+      satisfy(x !== c(5))
 
-      x < c(7)
+      satisfy(x < c(7))
 
-      x > c(8)
+      satisfy(x > c(8))
 
       def solutionStoreToSolution(s: Store) = s(x).min
 
@@ -80,9 +80,9 @@ class DepthFirstSearchTest {
 
       val x = newIntVar((4 to 6).union(1 to 2).union(10 to 11))
 
-      x !== c(5)
+      satisfy(x !== c(5))
 
-      x < c(7)
+      satisfy(x < c(7))
 
       def solutionStoreToSolution(s: Store) = s(x).min
 
@@ -105,9 +105,9 @@ class DepthFirstSearchTest {
 
       val x = newIntVar((4 to 6).union(1 to 2).union(10 to 11))
 
-      x !== c(5)
+      satisfy(x !== c(5))
 
-      x > c(30)
+      satisfy(x > c(30))
 
       def solutionStoreToSolution(s: Store) = s(x).min
 
@@ -131,15 +131,15 @@ class DepthFirstSearchTest {
 
       val x = newIntVar((4 to 6).union(1 to 2).union(10 to 11))
 
-      x !== c(5)
+      satisfy(x !== c(5))
 
-      x < c(7)
+      satisfy(x < c(7))
 
       override def constrain(s:Store) = {
     	  
     	  val xValue = s(x).min
 
-    	  x > c(xValue)
+    	  satisfy(x > c(xValue))
       }
       
       def solutionStoreToSolution(s: Store) = s(x).min
@@ -163,15 +163,15 @@ class DepthFirstSearchTest {
 
       val x = newIntVar((4 to 6).union(1 to 2).union(10 to 11))
 
-      x !== c(5)
+      satisfy(x !== c(5))
 
-      x < c(7)
+      satisfy(x < c(7))
 
       override def constrain(s:Store) = {
     	  
     	  val xValue = s(x).min
 
-    	  x < c(xValue)
+    	  satisfy(x < c(xValue))
       }
       
       def solutionStoreToSolution(s: Store) = s(x).min

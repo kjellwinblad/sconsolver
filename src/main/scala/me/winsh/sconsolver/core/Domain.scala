@@ -29,7 +29,7 @@ trait Domain extends Iterable[Int] {
 
   def onlyOneContains(that: Domain): Domain
 
-  def domainWithSmallestMinFirst(that: Domain): (Domain, Domain)
+  def domainWithSmalleststartFirst(that: Domain): (Domain, Domain)
 
   def greaterThan(number: Int): Domain
 
@@ -39,7 +39,7 @@ trait Domain extends Iterable[Int] {
 
   def lessThanOrEqual(number: Int): Domain
 
-  def fixPoint: Boolean = this.size == 1
+  def fixPoint: Boolean
 
   def fixPoint(valueP: Int): Boolean = fixPoint && this.value == valueP
 
@@ -52,7 +52,7 @@ object Domain {
   val empty = this(Nil)
 
   def apply(min: Int, max: Int): Domain = {
-    require(min <= max, "The min parameter is bigger than the max parameter")
+    require(min <= max, "The start parameter is bigger than the end parameter")
 
     new DomainImpl(List(min to max))
   }
@@ -63,8 +63,8 @@ object Domain {
 
     val ranges = domainValuesList.foldLeft(Nil: List[Range])((rangesList, value) => rangesList match {
       case Nil => List(value to value)
-      case e :: ls if e.max == value => e :: ls
-      case e :: ls if e.max + 1 == value => (e.min to value) :: ls
+      case e :: ls if e.end == value => e :: ls
+      case e :: ls if e.end + 1 == value => (e.start to value) :: ls
       case ls => (value to value) :: ls
     }).reverse
 
@@ -84,17 +84,17 @@ object Domain {
 
     lazy val min = {
       require(domainRanges != Nil)
-      domainRanges.head.min
+      domainRanges.head.start
     }
 
     lazy val max = {
       require(domainRanges != Nil)
-      domainRanges.last.max
+      domainRanges.last.end
     }
 
     lazy val value = {
       require(this.fixPoint, "The domain needs to have a single value in order to have a value.")
-      domainRanges.head.min
+      domainRanges.head.start
     }
 
     def union(that: Domain): Domain =
@@ -116,13 +116,13 @@ object Domain {
           case (domain, Nil) =>
             new DomainImpl(concatenateOrderedRangesIfAdjecent((domain.reverse ::: result).reverse))
           case (set1First :: set1Second :: set1Rest, set2) if (rangesHasIntersection(set1First, set1Second)) =>
-            union((set1First.min.min(set1Second.min) to set1First.max.max(set1Second.max)) :: set1Rest, set2, result)
-          case (set1First :: set1Rest, set2First :: set2Rest) if (set1First.max < set2First.min) =>
+            union((set1First.start.min(set1Second.start) to set1First.end.max(set1Second.end)) :: set1Rest, set2, result)
+          case (set1First :: set1Rest, set2First :: set2Rest) if (set1First.end < set2First.start) =>
             union(set1Rest, set2First :: set2Rest, set1First :: result)
-          case (set1First :: set1Rest, set2First :: set2Rest) if (set2First.max < set1First.min) =>
+          case (set1First :: set1Rest, set2First :: set2Rest) if (set2First.end < set1First.start) =>
             union(set1First :: set1Rest, set2Rest, set2First :: result)
           case (set1First :: set1Rest, set2First :: set2Rest) =>
-            union((set1First.min.min(set2First.min) to set1First.max.max(set2First.max)) :: set1Rest, set2Rest, result)
+            union((set1First.start.min(set2First.start) to set1First.end.max(set2First.end)) :: set1Rest, set2Rest, result)
 
         }
 
@@ -141,52 +141,52 @@ object Domain {
         //They may be intersecting in some way 
         //Find out which ranges are intersecting and change them
 
-        def intersectionDomain(smallestMinDomainbigestMinDomain: (Domain, Domain),
-          result: List[Range]): Domain = smallestMinDomainbigestMinDomain match {
+        def intersectionDomain(smalleststartDomainbigeststartDomain: (Domain, Domain),
+          result: List[Range]): Domain = smalleststartDomainbigeststartDomain match {
           case (Domain.empty, _) => new DomainImpl(result.reverse)
           case (_, Domain.empty) => new DomainImpl(result.reverse)
-          case (smallestMinDomain, bigestMinDomain) => {
-            val checkRanges = smallestMinDomain.domainRanges
+          case (smalleststartDomain, bigeststartDomain) => {
+            val checkRanges = smalleststartDomain.domainRanges
 
-            val firstInBigestMinDomain = bigestMinDomain.domainRanges.head
+            val firstInBigeststartDomain = bigeststartDomain.domainRanges.head
 
             val checkedRanges =
-              checkRanges.dropWhile((range) => range.min < firstInBigestMinDomain.min &&
-                !rangesHasIntersection(range, firstInBigestMinDomain))
+              checkRanges.dropWhile((range) => range.start < firstInBigeststartDomain.start &&
+                !rangesHasIntersection(range, firstInBigeststartDomain))
 
             checkedRanges match {
               case Nil => new DomainImpl(result.reverse)
-              case intersectingRange :: rest if (rangesHasIntersection(intersectingRange, firstInBigestMinDomain)) => {
+              case intersectingRange :: rest if (rangesHasIntersection(intersectingRange, firstInBigeststartDomain)) => {
 
-                val newResultRange = rangeIntersection(intersectingRange, firstInBigestMinDomain)
+                val newResultRange = rangeIntersection(intersectingRange, firstInBigeststartDomain)
 
                 //Do recursive call with the intersecting range droped in in
-                //firstElementIntersectingRanges and in bigestMinDomain
+                //firstElementIntersectingRanges and in bigeststartDomain
 
-                val newDomain1 = intersectingRange.max match {
-                  case value if (value == newResultRange.max) => new DomainImpl(checkedRanges.drop(1))
-                  case _ => new DomainImpl(((newResultRange.max + 1) to intersectingRange.max) :: checkedRanges.drop(1))
+                val newDomain1 = intersectingRange.end match {
+                  case value if (value == newResultRange.end) => new DomainImpl(checkedRanges.drop(1))
+                  case _ => new DomainImpl(((newResultRange.end + 1) to intersectingRange.end) :: checkedRanges.drop(1))
                 }
 
-                val newDomain2 = firstInBigestMinDomain.max match {
-                  case value if (value == newResultRange.max) => new DomainImpl(bigestMinDomain.domainRanges.drop(1))
-                  case _ => new DomainImpl(((newResultRange.max + 1) to firstInBigestMinDomain.max) :: bigestMinDomain.domainRanges.drop(1))
+                val newDomain2 = firstInBigeststartDomain.end match {
+                  case value if (value == newResultRange.end) => new DomainImpl(bigeststartDomain.domainRanges.drop(1))
+                  case _ => new DomainImpl(((newResultRange.end + 1) to firstInBigeststartDomain.end) :: bigeststartDomain.domainRanges.drop(1))
                 }
 
-                intersectionDomain(newDomain1.domainWithSmallestMinFirst(newDomain2),
+                intersectionDomain(newDomain1.domainWithSmalleststartFirst(newDomain2),
                   newResultRange :: result)
               }
               case _ => {
 
                 //In this case it is not certain that checkedRanges don't intersect with
-                //the second range in bigestMinDomain.domainRanges so we can just drop the
-                //first element in bigestMinDomain.domainRanges
+                //the second range in bigeststartDomain.domainRanges so we can just drop the
+                //first element in bigeststartDomain.domainRanges
 
                 val newDomain1 = new DomainImpl(checkedRanges)
 
-                val newDomain2 = new DomainImpl(bigestMinDomain.domainRanges.drop(1))
+                val newDomain2 = new DomainImpl(bigeststartDomain.domainRanges.drop(1))
 
-                intersectionDomain(newDomain1.domainWithSmallestMinFirst(newDomain2),
+                intersectionDomain(newDomain1.domainWithSmalleststartFirst(newDomain2),
                   result)
 
               }
@@ -194,7 +194,7 @@ object Domain {
           }
         }
 
-        intersectionDomain(this.domainWithSmallestMinFirst(that), Nil)
+        intersectionDomain(this.domainWithSmalleststartFirst(that), Nil)
 
       }
 
@@ -212,26 +212,26 @@ object Domain {
             new DomainImpl(result.reverse)
           case (domain, Nil) =>
             new DomainImpl((domain.reverse ::: result).reverse)
-          case (subtractFrom :: subtractFromRest, subtract :: subtractRest) if (subtractFrom.min > subtract.max) =>
+          case (subtractFrom :: subtractFromRest, subtract :: subtractRest) if (subtractFrom.start > subtract.end) =>
             difference(subtractFrom :: subtractFromRest, subtractRest, result)
-          case (subtractFrom :: subtractFromRest, subtract :: subtractRest) if (subtractFrom.max < subtract.min) =>
+          case (subtractFrom :: subtractFromRest, subtract :: subtractRest) if (subtractFrom.end < subtract.start) =>
             difference(subtractFromRest, subtract :: subtractRest, subtractFrom :: result)
           case (subtractFrom :: subtractFromRest, subtract :: subtractRest) =>
             (subtractFrom, subtract) match {
 
-              case (f, s) if (f.min >= s.min && s.max > f.max) =>
-                difference(subtractFromRest, (f.max + 1 to s.max) :: subtractRest, result)
-              case (f, s) if (f.min >= s.min && s.max == f.max) =>
+              case (f, s) if (f.start >= s.start && s.end > f.end) =>
+                difference(subtractFromRest, (f.end + 1 to s.end) :: subtractRest, result)
+              case (f, s) if (f.start >= s.start && s.end == f.end) =>
                 difference(subtractFromRest, subtractRest, result)
-              case (f, s) if (f.min >= s.min && s.max < f.max) =>
-                difference((s.max + 1 to f.max) :: subtractFromRest, subtractRest, result)
-              case (f, s) if (f.min < s.min && s.max > f.max) =>
-                difference(subtractFromRest, (f.max + 1 to s.max) :: subtractRest, (f.min to s.min - 1) :: result)
-              case (f, s) if (f.min < s.min && s.max == f.max) =>
-                difference(subtractFromRest, subtractRest, (f.min to s.min - 1) :: result)
-              case (f, s) if (f.min < s.min && s.max < f.max) =>
-                (f.min to s.min - 1) :: Nil
-                difference((s.max + 1 to f.max) :: subtractFromRest, subtractRest, (f.min to s.min - 1) :: result)
+              case (f, s) if (f.start >= s.start && s.end < f.end) =>
+                difference((s.end + 1 to f.end) :: subtractFromRest, subtractRest, result)
+              case (f, s) if (f.start < s.start && s.end > f.end) =>
+                difference(subtractFromRest, (f.end + 1 to s.end) :: subtractRest, (f.start to s.start - 1) :: result)
+              case (f, s) if (f.start < s.start && s.end == f.end) =>
+                difference(subtractFromRest, subtractRest, (f.start to s.start - 1) :: result)
+              case (f, s) if (f.start < s.start && s.end < f.end) =>
+                (f.start to s.start - 1) :: Nil
+                difference((s.end + 1 to f.end) :: subtractFromRest, subtractRest, (f.start to s.start - 1) :: result)
 
             }
 
@@ -253,71 +253,71 @@ object Domain {
         //They may be intersecting in some way 
         //Find out which ranges are intersecting and change them
 
-        def onlyOneContains(smallestMinDomainbigestMinDomain: (Domain, Domain),
-          result: List[Range]): Domain = smallestMinDomainbigestMinDomain match {
+        def onlyOneContains(smalleststartDomainbigeststartDomain: (Domain, Domain),
+          result: List[Range]): Domain = smalleststartDomainbigeststartDomain match {
           case (Domain.empty, domain) =>
             new DomainImpl(concatenateOrderedRangesIfAdjecent((domain.domainRanges.reverse ::: result).reverse))
           case (domain, Domain.empty) =>
             new DomainImpl(concatenateOrderedRangesIfAdjecent((domain.domainRanges.reverse ::: result).reverse))
-          case (smallestMinDomain, bigestMinDomain) => {
-            val checkRanges = smallestMinDomain.domainRanges
+          case (smalleststartDomain, bigeststartDomain) => {
+            val checkRanges = smalleststartDomain.domainRanges
 
-            val firstInBigestMinDomain = bigestMinDomain.domainRanges.head
+            val firstInBigeststartDomain = bigeststartDomain.domainRanges.head
 
             val (differ, mayDiffer) =
-              checkRanges.span((range) => range.min < firstInBigestMinDomain.min &&
-                !rangesHasIntersection(range, firstInBigestMinDomain))
+              checkRanges.span((range) => range.start < firstInBigeststartDomain.start &&
+                !rangesHasIntersection(range, firstInBigeststartDomain))
 
             mayDiffer match {
               case Nil => new DomainImpl((differ.reverse ::: result).reverse)
-              case intersectingRange :: rest if (intersectingRange.min == firstInBigestMinDomain.min &&
-                intersectingRange.max == firstInBigestMinDomain.max) => {
+              case intersectingRange :: rest if (intersectingRange.start == firstInBigeststartDomain.start &&
+                intersectingRange.end == firstInBigeststartDomain.end) => {
 
                 val newDomain1 = new DomainImpl(mayDiffer.drop(1))
 
-                val newDomain2 = new DomainImpl(bigestMinDomain.domainRanges.drop(1))
+                val newDomain2 = new DomainImpl(bigeststartDomain.domainRanges.drop(1))
 
-                onlyOneContains(newDomain1.domainWithSmallestMinFirst(newDomain2),
+                onlyOneContains(newDomain1.domainWithSmalleststartFirst(newDomain2),
                   differ.reverse ::: result)
               }
-              case intersectingRange :: rest if (rangesHasIntersection(intersectingRange, firstInBigestMinDomain)) => {
+              case intersectingRange :: rest if (rangesHasIntersection(intersectingRange, firstInBigeststartDomain)) => {
 
-                val newResultRanges = (intersectingRange, firstInBigestMinDomain) match {
-                  case (r1, r2) if (r1.min == r2.min) => (r1.max.min(r2.max) + 1 to r1.max.max(r2.max)) :: Nil
-                  case (r1, r2) if (r1.max == r2.max) => (r1.min.min(r2.min) to r1.min.max(r2.min) - 1) :: Nil
-                  case (r1, r2) => (r1.max.min(r2.max) + 1 to r1.max.max(r2.max)) :: (r1.min.min(r2.min) to r1.min.max(r2.min) - 1) :: Nil
+                val newResultRanges = (intersectingRange, firstInBigeststartDomain) match {
+                  case (r1, r2) if (r1.start == r2.start) => (r1.end.min(r2.end) + 1 to r1.end.max(r2.end)) :: Nil
+                  case (r1, r2) if (r1.end == r2.end) => (r1.start.min(r2.start) to r1.start.max(r2.start) - 1) :: Nil
+                  case (r1, r2) => (r1.end.min(r2.end) + 1 to r1.end.max(r2.end)) :: (r1.start.min(r2.start) to r1.start.max(r2.start) - 1) :: Nil
                 }
 
-                val maxNewResultRange = newResultRanges.head
+                val endNewResultRange = newResultRanges.head
                 //Do recursive call with the intersecting range droped in in
-                //firstElementIntersectingRanges and in bigestMinDomain
+                //firstElementIntersectingRanges and in bigeststartDomain
 
                 val (newResultRangesToReturn, newDomain1, newDomain2) =
-                  (intersectingRange.max, firstInBigestMinDomain.max) match {
-                    case (iMax, fMax) if (iMax == fMax) =>
+                  (intersectingRange.end, firstInBigeststartDomain.end) match {
+                    case (iend, fend) if (iend == fend) =>
                       (newResultRanges,
                         new DomainImpl(mayDiffer.drop(1)),
-                        new DomainImpl(bigestMinDomain.domainRanges.drop(1)))
-                    case (iMax, fMax) if (iMax > fMax) =>
+                        new DomainImpl(bigeststartDomain.domainRanges.drop(1)))
+                    case (iend, fend) if (iend > fend) =>
                       (if (newResultRanges.size == 2) newResultRanges.drop(1) else Nil,
-                        new DomainImpl(maxNewResultRange :: mayDiffer.drop(1)),
-                        new DomainImpl(bigestMinDomain.domainRanges.drop(1)))
+                        new DomainImpl(endNewResultRange :: mayDiffer.drop(1)),
+                        new DomainImpl(bigeststartDomain.domainRanges.drop(1)))
                     case _ =>
                       (if (newResultRanges.size == 2) newResultRanges.drop(1) else Nil,
                         new DomainImpl(mayDiffer.drop(1)),
-                        new DomainImpl(maxNewResultRange :: bigestMinDomain.domainRanges.drop(1)))
+                        new DomainImpl(endNewResultRange :: bigeststartDomain.domainRanges.drop(1)))
                   }
 
-                onlyOneContains(newDomain1.domainWithSmallestMinFirst(newDomain2),
+                onlyOneContains(newDomain1.domainWithSmalleststartFirst(newDomain2),
                   newResultRangesToReturn ::: differ.reverse ::: result)
               }
               case _ => {
 
                 val newDomain1 = new DomainImpl(mayDiffer)
 
-                val newDomain2 = new DomainImpl(bigestMinDomain.domainRanges)
+                val newDomain2 = new DomainImpl(bigeststartDomain.domainRanges)
 
-                onlyOneContains(newDomain1.domainWithSmallestMinFirst(newDomain2),
+                onlyOneContains(newDomain1.domainWithSmalleststartFirst(newDomain2),
                   differ.reverse ::: result)
 
               }
@@ -325,7 +325,7 @@ object Domain {
           }
         }
 
-        onlyOneContains(this.domainWithSmallestMinFirst(that), Nil)
+        onlyOneContains(this.domainWithSmalleststartFirst(that), Nil)
 
       }
 
@@ -334,12 +334,12 @@ object Domain {
         this
       else {
 
-        val ranges = domainRanges.dropWhile((r) => (r.max <= number))
+        val ranges = domainRanges.dropWhile((r) => (r.end <= number))
 
         ranges match {
           case Nil => new DomainImpl(Nil)
-          case e :: rest if (e.min > number) => new DomainImpl(e :: rest)
-          case e :: rest => new DomainImpl((number + 1 to e.max) :: rest)
+          case e :: rest if (e.start > number) => new DomainImpl(e :: rest)
+          case e :: rest => new DomainImpl((number + 1 to e.end) :: rest)
         }
       }
 
@@ -348,12 +348,12 @@ object Domain {
         this
       else {
 
-        val ranges = (domainRanges.takeWhile((r) => (r.min < number))).reverse
+        val ranges = (domainRanges.takeWhile((r) => (r.start < number))).reverse
 
         new DomainImpl((ranges match {
           case Nil => Nil
-          case e :: rest if (e.max < number) => e :: rest
-          case e :: rest => (e.min to number - 1) :: rest
+          case e :: rest if (e.end < number) => e :: rest
+          case e :: rest => (e.start to number - 1) :: rest
         }).reverse)
       }
 
@@ -365,10 +365,10 @@ object Domain {
       if (isEmpty)
         "Domain()"
       else
-        "Domain(" + domainRanges.map((d) => ("" + (if (d.min == d.max) d.min
-        else d.min + " to " + d.max))).mkString(", ") + ")"
+        "Domain(" + domainRanges.map((d) => ("" + (if (d.start == d.end) d.start
+        else d.start + " to " + d.end))).mkString(", ") + ")"
 
-    def domainWithSmallestMinFirst(that: Domain) = (this, that) match {
+    def domainWithSmalleststartFirst(that: Domain) = (this, that) match {
       case (Domain.empty, _) => (this, that)
       case (_, Domain.empty) => (this, that)
       case _ => if (this.min <= that.min) (this, that) else (that, this)
@@ -399,6 +399,11 @@ object Domain {
 
     }
 
+    def fixPoint: Boolean = domainRanges match {
+      case List(range) => range.start == range.end
+      case _ => false
+    }
+
     override def equals(that: Any): Boolean = {
       that.isInstanceOf[Domain] && this.domainRanges == that.asInstanceOf[Domain].domainRanges
     }
@@ -410,8 +415,8 @@ object Domain {
         result: List[Range]): List[Range] = ranges match {
         case Nil => result.reverse
         case e :: Nil => (e :: result).reverse
-        case e1 :: e2 :: rest if e1.max == (e2.min - 1) =>
-          concatenateRangesIfAdjecentInternal((e1.min to e2.max) :: rest, result)
+        case e1 :: e2 :: rest if e1.end == (e2.start - 1) =>
+          concatenateRangesIfAdjecentInternal((e1.start to e2.end) :: rest, result)
         case e1 :: rest =>
           concatenateRangesIfAdjecentInternal(rest, e1 :: result)
 
@@ -421,17 +426,17 @@ object Domain {
 
     private def rangeIntersection(range1: Range, range2: Range) =
       if (rangesHasIntersection(range1, range2))
-        range1.min.max(range2.min) to range1.max.min(range2.max)
+        range1.start.max(range2.start) to range1.end.min(range2.end)
       else
         emptyRange
 
     private val emptyRange = 0 until 0
 
     private def rangesHasIntersection(range1: Range, range2: Range) =
-      range1.contains(range2.min) ||
-        range1.contains(range2.max) ||
-        range2.contains(range1.min) ||
-        range2.contains(range1.max)
+      range1.contains(range2.start) ||
+        range1.contains(range2.end) ||
+        range2.contains(range1.start) ||
+        range2.contains(range1.end)
   }
 
 }

@@ -2,10 +2,11 @@ package me.winsh.sconsolver.core
 
 import scala.collection.immutable.HashSet
 import scala.collection.immutable.HashMap
+import scala.util.Random
 
 trait Store {
 
-  val variableToDomainMap: Map[Var, Domain]
+  protected val variableToDomainMap: Map[Var, Domain]
 
   def apply(variable: Var) = getDomain(variable)
 
@@ -24,6 +25,10 @@ trait Store {
   def failed: Boolean
 
   def fixPoint: Boolean
+  
+  def variables:Iterable[Var]
+  
+  def unassignedVars:Iterable[Var]
 
 }
 
@@ -90,6 +95,13 @@ object Store {
       domain.fixPoint
     })
 
+    def unassignedVars:Iterable[Var] = variableToDomainMap.keys.filter((variable) => {
+        val domain = variableToDomainMap.get(variable).get
+    	if (domain.fixPoint || domain.failed) false else true
+      })
+    
+    def variables:Iterable[Var] = variableToDomainMap.keys
+    
     override def equals(that: Any) = that.asInstanceOf[Store].variableToDomainMap == this.variableToDomainMap
 
     override def toString = "Store(" + variableToDomainMap.toList.

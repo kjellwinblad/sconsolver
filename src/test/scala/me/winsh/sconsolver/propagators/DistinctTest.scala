@@ -4,11 +4,15 @@ import me.winsh.sconsolver.core._
 import me.winsh.sconsolver.propagators._
 import org.junit._
 import Assert._
+import me.winsh.sconsolver.branchings.variable.FirstUnassigned
+import me.winsh.sconsolver.branchings.value.MinValue
+import me.winsh.sconsolver.branchings.variable.Random
+import me.winsh.sconsolver.branchings.variable.MostConstrained
 
 @Test
 class DistinctTest {
 
-  @Test
+  @Test 
   def testFail {
 
     val solver = new BasicCSPModel {
@@ -103,6 +107,8 @@ class DistinctTest {
     //The Constraint Satisfaction Problem (CSP) for Soduku
     class SudokuSolver(val sudokuBord: SudokuBoard) extends BasicCSPModel {
 
+      
+      
       //Declare vars representing the soduku matrix
       val rows =
         Array.fill(9)(Array.fill(9)(newIntVar(1 to 9)))
@@ -120,6 +126,8 @@ class DistinctTest {
       //Put all areas in a list
       val areas = List(rows, columns, squares).flatten
 
+      //Constraints
+      
       //Define constraints so every value in an area is distinct in the area 
       areas.foreach(distinct(_))
 
@@ -129,10 +137,13 @@ class DistinctTest {
         val (row, y) = rowIndex
 
         row.zipWithIndex.foreach((columnIndex) => columnIndex match {
-          case (Some(value), x) => c(value) === rows(y)(x)
+          case (Some(value), x) => satisfy(c(value) === rows(y)(x))
           case _ => Unit
         })
       })
+      
+      //Configuration
+      branching = Branching(FirstUnassigned, MinValue)
 
     }
 

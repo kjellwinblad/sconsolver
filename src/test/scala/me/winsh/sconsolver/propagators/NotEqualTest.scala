@@ -17,7 +17,7 @@ class NotEqualTest {
 			
 			val y =  c(8)
 			
-			x !== y
+			satisfy(x !== y)
 			
 			val s = initialStore
 			
@@ -49,7 +49,7 @@ class NotEqualTest {
 			
 			val y =  c(5)
 			
-			x !== y
+			satisfy(x !== y)
 			
 			val s = initialStore
 			

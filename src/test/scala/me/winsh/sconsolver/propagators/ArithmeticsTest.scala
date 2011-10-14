@@ -252,7 +252,7 @@ class ArithmeticsTest {
 
     assertTrue(solutions.isEmpty)
   }
-/*
+  /*
   @Test
   def divTest1 {
 
@@ -346,5 +346,72 @@ class ArithmeticsTest {
     val solutions = simpleCSP.findAllSolutions.toSet
 
     assertTrue(solutions.isEmpty)
+  }
+
+  @Test
+  def testModel {
+
+    val simpleCSP = new BasicCSPModel {
+
+      //Vars
+      val a = newIntVar(1, 5)
+      val b = newIntVar(1, 5)
+      val c = newIntVar(8, 10)
+      
+      //Constrainsts
+      satisfy((a + b) === c)
+
+      println(initialPropagators)
+      println(initialStore)
+      override def solutionStoreToSolution(st: Store) = {
+        val av = st(a).value
+        val bv = st(b).value
+        val cv = st(c).value
+
+        assertTrue(av + bv == cv)
+
+        st
+      }
+    }
+
+    val solutions = simpleCSP.findAllSolutions
+
+    assertEquals(solutions.size, 6)
+  }
+
+  @Test
+  def sendMoreMoney {
+
+    val simpleCSP = new BasicCSPModel {
+
+      //Vars
+      val vars = List.fill(8)(newIntVar(0 to 9))
+      val List(s, e, n, d, m, o, r, y) = vars
+
+      //Constrainsts
+      distinct(vars)
+      satisfy(s !== c(0))
+      satisfy(m !== c(0))
+      satisfy((s * c(1000) + e * c(100) + n * c(10) + d +
+        m * c(1000) + o * c(100) + r * c(10) + e) ===
+        (m * c(10000) + o * c(1000) + n * c(100) + e * c(10) + y))
+
+      override def solutionStoreToSolution(st: Store) = {
+        //print(List(s, e, n, d).map(st(_).value).mkString("") + " + ")
+        //print(List(m, o, r, e).map(st(_).value).mkString("") + " = ")
+        //print(List(m, o, n, e, y).map(st(_).value).mkString(""))
+        //println()
+        val send = List(s, e, n, d).map(st(_).value).mkString("").toInt
+        val more = List(m, o, r, e).map(st(_).value).mkString("").toInt
+        val money = List(m, o, n, e, y).map(st(_).value).mkString("").toInt
+
+        assertTrue((send + more) == money)
+        st
+      }
+    }
+
+    val solutions = simpleCSP.findAllSolutions
+
+    assertEquals(solutions.size, 1)
   }
 }

@@ -32,7 +32,7 @@ trait ConstraintSatisfactionProblemModel[R]
 
   def solutionStoreToSolution(s: Store): R
 
-  var branching: Branching = Branching(FirstUnassigned, MinValue)
+  var branching: Branching = Branching(MostConstrained, MinValue)
 
   var searchMethod: SearchMethod = DepthFirstSearch
 
@@ -122,7 +122,7 @@ trait ConstraintSatisfactionProblemModel[R]
     newVar
   }
 
-  def newIntVar(): Var = newIntVar(-10000000, 10000000)
+  def newIntVar(): Var = newIntVar(-Int.MaxValue/2, Int.MaxValue/2)//(-100000,100000)
 
   def newIntVar(min: Int, max: Int): Var = newIntVar(Domain(min, max))
 
@@ -148,7 +148,7 @@ trait ConstraintSatisfactionProblemModel[R]
 
   //Helper to add constraints
 
-  implicit def var2intVar(v: Var): IntVar = {
+  /*implicit def var2intVar(v: Var): IntVar = {
 
     new IntVar {
       val id = v.id
@@ -162,6 +162,68 @@ trait ConstraintSatisfactionProblemModel[R]
       def !==(that: IntVar): Propagator = notEqual(this, that)
     }
 
-  }
+  }*/
 
+  implicit def var2mVav(v: Var): MVar = {
+
+    new MVar {
+      val id = v.id
+      def <=(that: MVar): MVar = {
+        var variable = newBoolVar()
+        isLessThanOrEqual(this, that,variable)
+        variable
+      }
+      def >=(that: MVar): MVar = {
+        var variable = newBoolVar()
+        isGreaterThanOrEqual(this, that, variable)
+        variable
+      } 
+      def <(that: MVar): MVar = {
+        var variable = newBoolVar()
+        isLessThan(this, that, variable)
+        variable
+      }
+      def >(that: MVar): MVar = {
+        var variable = newBoolVar()
+        isGreaterThan(this, that, variable)
+        variable
+      }
+      
+      def ===(that: MVar): MVar = {
+        var variable = newBoolVar()
+        isEqual(this, that, variable)
+        variable
+      }
+      def !==(that: MVar): MVar = {
+        var variable = newBoolVar()
+        isNotEqual(this, that, variable)
+        variable
+      }
+      
+      def +(that: MVar): MVar = {
+        var variable = newIntVar()
+        add(this, that, variable)
+        variable
+      }
+      def -(that: MVar): MVar = {
+        var variable = newIntVar()
+        sub(this, that, variable)
+        variable
+      }
+      def *(that: MVar): MVar = {
+        var variable = newIntVar()
+        mult(this, that, variable)
+        variable
+      }
+      def /(that: MVar): MVar = {
+        var variable = newIntVar()
+        div(this, that, variable)
+        variable
+      }
+    }
+
+  }
+  
+  def satisfy(variable:MVar){equal(variable, true)}
+  def satisfyFalse(variable:MVar){equal(variable, true)}
 }
