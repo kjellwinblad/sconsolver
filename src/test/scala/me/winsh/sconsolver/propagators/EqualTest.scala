@@ -31,7 +31,7 @@ class EqualTest {
 			
 			assertEquals(Domain(8), newS(y))
 			
-			assertTrue(newP.isEmpty) 
+			assertTrue(newP.isEmpty)
 			
 			
 		}

@@ -50,9 +50,9 @@ class CSPTest {
 			
 			val (newP, newS) = Propagate.propagate(p, s)
 					
-			assertTrue(newP.toSet.contains(new IsLessThanAndLessThanOrEqualPropagator(x,y,variable1,lessThan=false)))
+			assertTrue(newP.toSet.contains(new LessThanAndLessThanOrEqualResultPropagator(x,y,variable1,lessThan=false)))
 			
-			assertFalse(newP.toSet.contains(new IsLessThanAndLessThanOrEqualPropagator(y,constant,variable2,lessThan=false)))
+			assertFalse(newP.toSet.contains(new LessThanAndLessThanOrEqualResultPropagator(y,constant,variable2,lessThan=false)))
 			
 			assertEquals(Domain(5 to 7), newS(x))
 			

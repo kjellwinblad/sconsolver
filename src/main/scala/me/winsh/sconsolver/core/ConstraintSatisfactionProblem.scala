@@ -18,7 +18,7 @@ trait CSPModel[R] extends ConstraintSatisfactionProblemModel[R] {
 }
 
 trait ConstraintSatisfactionProblemModel[R]
-  extends IntRelationConstraints with DistinctConstraint with ArithmeticsConstraints {
+  extends IntRelationConstraints with DistinctConstraint with ArithmeticsConstraints with LogicalConstraints{
 
   //Domain Specific Language State
   //==============================
@@ -140,7 +140,7 @@ trait ConstraintSatisfactionProblemModel[R]
 
   def newBoolVar(): Var = newIntVar(Domain(0, 1))
 
-  def newBoolVarConstant(value: Boolean): Var = newIntVar(Domain(if (true) 1 else 0))
+  def newBoolVarConstant(value: Boolean): Var = newIntVar(Domain(if (value==true) 1 else 0))
 
   def c(value: Boolean) = newBoolVarConstant(value)
 
@@ -220,6 +220,18 @@ trait ConstraintSatisfactionProblemModel[R]
         div(this, that, variable)
         variable
       }
+      def and(that: MVar): MVar = {
+        var variable = newBoolVar()
+        ConstraintSatisfactionProblemModel.this.and(this, that, variable)
+        variable
+      }
+      def &&(that: MVar): MVar = and(that)
+      def or(that: MVar): MVar = {
+        var variable = newBoolVar()
+        ConstraintSatisfactionProblemModel.this.or(this, that, variable)
+        variable
+      }
+      def ||(that: MVar): MVar = or(that)
     }
 
   }

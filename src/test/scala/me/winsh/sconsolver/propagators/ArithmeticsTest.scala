@@ -361,8 +361,6 @@ class ArithmeticsTest {
       //Constrainsts
       satisfy((a + b) === c)
 
-      println(initialPropagators)
-      println(initialStore)
       override def solutionStoreToSolution(st: Store) = {
         val av = st(a).value
         val bv = st(b).value

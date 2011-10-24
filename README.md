@@ -30,9 +30,10 @@ Version 0.1 of SConSolver shall contain the following when it is released:
   * Modulo (x % y == z)
 
 * Logical propagators (Parameters are variables that can be 0 or 1):
-  * Or (x or y == z)
-  * And (x and y == z)
+  * Or (x or y == z) **DONE**
+  * And (x and y == z) **DONE**
   * Not (!x == y)
+  * Xor (!x == y)
 
 
 * Global propagators:

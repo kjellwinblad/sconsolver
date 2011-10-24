@@ -8,7 +8,7 @@ trait DistinctConstraint extends Constraint {
 
   def distinct(vars: Iterable[Var]) = {
 
-    checkRequirements(vars)
+    checkRequirements(vars.toSeq:_*)
 
     add(new DistinctPropagator(vars.toList))
   }
