@@ -39,7 +39,7 @@
     <!-- #header: holds the logo and top links -->
     <div id="header" class="width">
   
-      <img src="images/logo.gif" alt="Your logo goes here"/>
+      <a href="index.html"><img src="images/logo.gif" alt="SconSolver Logo"/></a>
         
       <!--<a href="http://www.xebia.com/">
           <img style="position: relative; top: 15px; left: -180px; border: 0; z-index:100000;" 
@@ -48,7 +48,7 @@
       </a>-->
   
       <ul>
-        <li><a href="http://kjellwinblad.github.com/sconsolver/" {% if page.id == 'home' %}class="here"{% endif %}>Home</a></li>
+        <li><a href="index.html" {% if page.id == 'home' %}class="here"{% endif %}>Home</a></li>
         <li><a href="about.html" {% if page.id == 'about' %}class="here"{% endif %}>About</a></li>
         <li><a href="credits.html" class="last{% if page.id == 'credits' %} here{% endif %}">Credits</a></li>
       </ul>
