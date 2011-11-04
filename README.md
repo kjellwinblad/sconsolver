@@ -32,8 +32,8 @@ Version 0.1 of SConSolver shall contain the following when it is released:
 * Logical propagators (Parameters are variables that can be 0 or 1):
   * Or (x or y == z) **DONE**
   * And (x and y == z) **DONE**
-  * Not (!x == y)
-  * Xor (!x == y)
+  * Not (!x == y) **DONE**
+  * Xor (x xor y == z) **DONE**
 
 
 * Global propagators:
@@ -44,7 +44,7 @@ Version 0.1 of SConSolver shall contain the following when it is released:
 
 * A framework for extending the system with new propagators search methods etc **90% DONE**
 
-* A Domain Specific Language for Constraint Programming **70% DONE**
+* A Domain Specific Language for Constraint Programming **85% DONE**
 
 * Examples:
   * A sudoku solver **70% DONE**

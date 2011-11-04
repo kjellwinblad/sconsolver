@@ -22,15 +22,13 @@ trait LogicalConstraints extends Constraint {
   def xor(x: Var, y: Var) = {
     checkRequirements(x, y)
     checkBoolean(x,y)
-    throw new UnsupportedOperationException()
-    //add(new XorPropagator(x, y))
+    add(new XorPropagator(x, y))
   }
   
   def xor(x: Var, y: Var, result: Var) = {
     checkRequirements(x, y, result)
     checkBoolean(x, y, result)
-    throw new UnsupportedOperationException()
-    //add(new XorResultPropagator(x, y, result))
+    add(new XorResultPropagator(x, y, result))
   }
   
   def or(x: Var, y: Var) = {
@@ -55,8 +53,7 @@ trait LogicalConstraints extends Constraint {
   def not(x: Var, result: Var) = {
     checkRequirements(x, result)
     checkBoolean(x, result)
-    throw new UnsupportedOperationException()
-    //add(new NotResultPropagator(x, y, result))
+    add(new NotResultPropagator(x, result))
   }
 
 }

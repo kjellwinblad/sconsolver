@@ -13,10 +13,14 @@ class NotResultPropagator(val x: Var, val result: Var) extends Propagator {
     if (zD.fixPoint(1))
       new NotPropagator(x).propagate(s)
     else if (zD.fixPoint(0) && xD.fixPoint(0))
-      (Failed, s)
-    else if (zD.fixPoint(0)) {
+      (Failed, s(x, Domain())(result,Domain()))
+    else if (xD.fixPoint(0))
+      (Subsumed, s(result,Domain(1)))
+    else if (zD.fixPoint(0))
       (Subsumed, s(x, Domain(1)))
-    } else
+    else if (xD.fixPoint(1))
+      (Subsumed, s(result,Domain(0)))      
+    else
       (FixPoint, s)
   }
 
