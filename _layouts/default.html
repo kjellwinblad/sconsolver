@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+
+  <title>SconsSolver - {{ page.title }}</title>
+
+  <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+  <meta name="author" content="Kjell Winblad. Design taken from http://scala-labs.github.com. Original template by studio7designs.com" />
+  <meta name="description" content="SconsSolver is a constraint solver written in Scala." />
+  <meta name="keywords" content="scala, constraint solver, constraint, solver, integer" />
+  <meta name="robots" content="index, follow" />
+
+  <link rel="stylesheet" type="text/css" href="css/layout.css" media="screen, projection, tv " />
+  <link rel="stylesheet" type="text/css" href="css/html.css" media="screen, projection, tv " />
+  <link rel="stylesheet" type="text/css" href="css/syntax.css" media="screen, projection, tv " />
+ 
+</head>
+
+<body>
+
+  <!-- #content: holds all except site footer - causes footer to stick to bottom -->
+  <div id="content">
+
+  <a href="http://github.com/kjellwinblad/sconsolver/">
+      <img style="position: absolute; top: 0; left: 0; border: 0; z-index:100000;" 
+           src="http://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png" 
+           alt="Fork me on GitHub"/>
+  </a>
+  
+    <!-- #header: holds the logo and top links -->
+    <div id="header" class="width">
+  
+      <img src="images/logo.gif" alt="Your logo goes here"/>
+        
+      <!--<a href="http://www.xebia.com/">
+          <img style="position: relative; top: 15px; left: -180px; border: 0; z-index:100000;" 
+               src="images/a-xebia-initiative-smaller.png" 
+               alt="A Xebia Initiative"/>
+      </a>-->
+  
+      <ul>
+        <li><a href="index.html" {% if page.id == 'home' %}class="here"{% endif %}>Home</a></li>
+        <!--<li><a href="about.html" {% if page.id == 'about' %}class="here"{% endif %}>About us</a></li>
+        <li><a href="credits.html" class="last{% if page.id == 'credits' %} here{% endif %}">Credits</a></li>-->
+      </ul>
+  
+    </div>
+    <!-- #header end -->
+  
+  
+    <!-- #headerImg: holds the main header image or flash -->
+    <div id="headerImg" class="width"></div>
+  
+  
+  <!-- #menu: the main large box site menu -->
+    <div id="menu" class="width">
+  
+      <ul>
+        <li>
+          <a href="getting-started.html" onfocus="blur()" {% if page.id == 'getting-started' %}class="here"{% endif %}>
+            <span class="title">Getting Started</span>
+            <span class="desc">How to get started with SconsSolver</span>
+          </a>
+        </li>
+<!--        <li>
+          <a href="labs-overview.html" onfocus="blur()" {% if page.id == 'labs-overview' %}class="here"{% endif %}>
+            <span class="title">The Labs</span>
+            <span class="desc style3">An overview of our labs and what they are about</span>
+          </a>
+        </li>
+        <li>
+          <a href="learning-scala.html" onfocus="blur()" {% if page.id == 'learning-scala' %}class="here"{% endif %}>
+            <span class="title">Learning Scala</span>
+            <span class="desc">Online resources for learning about Scala</span>
+          </a>
+        </li>
+        <li
+          <a href="contribute.html" onfocus="blur()" {% if page.id == 'contribute' %}class="here"{% endif %}>
+            <span class="title">Contribute</span>
+            <span class="desc">How to create your own labs and contribute them</span>
+          </a>
+        </li>>-->
+      </ul>
+  
+    </div>
+    <!-- #menu end -->
+  
+  
+    <!-- #page: holds the page content -->
+    <div id="page">
+  
+  
+      <!-- #columns: holds the columns of the page -->
+      <div id="columns" class="widthPad">
+  
+  
+      <!-- Single column -->
+      <div class="floatLeft width100">
+      
+        {{ content }}
+  
+      </div>
+      <!-- Single column end -->
+  
+  
+      </div>
+      <!-- #columns end -->
+  
+    </div>
+    <!-- #page end -->
+  
+  </div>
+  <!-- #content end -->
+  
+  
+  
+  
+  <!-- #footer: holds the site footer (logo and links) -->
+  <div id="footer">
+  
+    <!-- #bg: applies the site width and footer background -->
+    <div id="bg" class="width">
+  
+      <!--<a href="http://www.xebia.com/">
+          <img style="position: relative; top: 15px; left: 280px; border: 0; z-index:100000;" 
+               src="images/a-xebia-initiative-smaller.png" 
+               alt="A Xebia Initiative"/>
+      </a>-->
+  
+      <ul>
+        <li>
+        <!--
+          <a href="http://www.opensourcetemplates.org/templates/preview/1111865659/"
+             class="last">Design based on a template by STUDIO7DESIGNS
+          </a>
+          -->
+        </li>
+       </ul>
+  
+    </div>
+    <!-- #bg end -->
+  
+  </div>
+  <!-- #footer end -->
+<script type=\"text/javascript\">
+var gaJsHost = ((\"https:\" == document.location.protocol) ? \"https://ssl.\" : \"http://www.\");
+document.write(unescape(\"%3Cscript src='\" + gaJsHost + \"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E\"));
+</script>
+<script type=\"text/javascript\">
+try {
+var pageTracker = _gat._getTracker("UA-2568718-6");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+
+</html>
