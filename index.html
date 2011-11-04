@@ -8,29 +8,23 @@ id: home
 <h1>Welcome to <span class="dark">SconSolver</span></h1>
 
 <p class="text-content">
-  SconSolver is a constraint solver written in Scala. It is still under havey development but can be used to solve some simple problems. It is fun and easy to add new constraints and features to the solver. The classical send-more-money problem:
+  SconSolver is a constraint solver written in Scala. It is still under havey development but can be used to solve some simple problems. The classical send-more-money problem implemented with SconSolver:
 <pre class="brush: scala;">
 val sendMoreMoneyCSP = new BasicCSPModel {
-  //Vars
   val vars = List.fill(8)(newIntVar(0 to 9))
   val List(s, e, n, d, m, o, r, y) = vars
-  //Constrainsts
   distinct(vars)
-  satisfy(s !== c(0))
-  satisfy(m !== c(0))
+  satisfy((s !== c(0)) && (m !== c(0)))
   satisfy((s * c(1000) + e * c(100) + n * c(10) + d +
            m * c(1000) + o * c(100) + r * c(10) + e) ===
           (m * c(10000) + o * c(1000) + n * c(100) + e * c(10) + y))
-  //Handle solutions
   override def solutionStoreToSolution(s: Store) = {
-    print(List(s, e, n, d).map(s(_).value).mkString("") + " + ")
-    print(List(m, o, r, e).map(s(_).value).mkString("") + " = ")
-    print(List(m, o, n, e, y).map(s(_).value).mkString(""))
-    println()
-    None
+    List(s, e, n, d).map(s(_).value).mkString("") + " + " +
+    List(m, o, r, e).map(s(_).value).mkString("") + " = " +
+    List(m, o, n, e, y).map(s(_).value).mkString("")
   }
 }
-simpleCSP.findAllSolutions
+println(simpleCSP.findAllSolutions)
 </pre>
 </p>
 
