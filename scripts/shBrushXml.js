@@ -1,63 +1,69 @@
 /**
  * SyntaxHighlighter
- * http://alexgorbatchev.com/
+ * http://alexgorbatchev.com/SyntaxHighlighter
+ *
+ * SyntaxHighlighter is donationware. If you are using it, please donate.
+ * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
  *
  * @version
- * 2.0.278 (February 03 2009)
- *
- * @author
- * Alex Gorbatchev
+ * 3.0.83 (July 02 2010)
  * 
  * @copyright
- * Copyright (C) 2004-2009 Alex Gorbatchev.
+ * Copyright (C) 2004-2010 Alex Gorbatchev.
  *
- * Licensed under a GNU Lesser General Public License.
- * http://creativecommons.org/licenses/LGPL/2.1/
- *
- * SyntaxHighlighter is donationware. You are allowed to download, modify and distribute 
- * the source code in accordance with LGPL 2.1 license, however if you want to use 
- * SyntaxHighlighter on your site or include it in your product, you must donate.
- * http://alexgorbatchev.com/wiki/SyntaxHighlighter:Donate
+ * @license
+ * Dual licensed under the MIT and GPL licenses.
  */
-SyntaxHighlighter.brushes.Xml = function()
+;(function()
 {
-	function process(match, regexInfo)
+	// CommonJS
+	typeof(require) != 'undefined' ? SyntaxHighlighter = require('shCore').SyntaxHighlighter : null;
+
+	function Brush()
 	{
-		var constructor = SyntaxHighlighter.Match,
-			code = match[0],
-			tag = new XRegExp('(&lt;|<)[\\s\\/\\?]*(?<name>[:\\w-\\.]+)', 'xg').exec(code),
-			result = []
-			;
-		
-		if (match.attributes != null) 
+		function process(match, regexInfo)
 		{
-			var attributes,
-				regex = new XRegExp('(?<name> [\\w:\\-\\.]+)' +
-									'\\s*=\\s*' +
-									'(?<value> ".*?"|\'.*?\'|\\w+)',
-									'xg');
-
-			while ((attributes = regex.exec(code)) != null) 
+			var constructor = SyntaxHighlighter.Match,
+				code = match[0],
+				tag = new XRegExp('(&lt;|<)[\\s\\/\\?]*(?<name>[:\\w-\\.]+)', 'xg').exec(code),
+				result = []
+				;
+		
+			if (match.attributes != null) 
 			{
-				result.push(new constructor(attributes.name, match.index + attributes.index, 'color1'));
-				result.push(new constructor(attributes.value, match.index + attributes.index + attributes[0].indexOf(attributes.value), 'string'));
+				var attributes,
+					regex = new XRegExp('(?<name> [\\w:\\-\\.]+)' +
+										'\\s*=\\s*' +
+										'(?<value> ".*?"|\'.*?\'|\\w+)',
+										'xg');
+
+				while ((attributes = regex.exec(code)) != null) 
+				{
+					result.push(new constructor(attributes.name, match.index + attributes.index, 'color1'));
+					result.push(new constructor(attributes.value, match.index + attributes.index + attributes[0].indexOf(attributes.value), 'string'));
+				}
 			}
+
+			if (tag != null)
+				result.push(
+					new constructor(tag.name, match.index + tag[0].indexOf(tag.name), 'keyword')
+				);
+
+			return result;
 		}
-
-		if (tag != null)
-			result.push(
-				new constructor(tag.name, match.index + tag[0].indexOf(tag.name), 'keyword')
-			);
-
-		return result;
-	}
 	
-	this.regexList = [
-		{ regex: new XRegExp('(\\&lt;|<)\\!\\[[\\w\\s]*?\\[(.|\\s)*?\\]\\](\\&gt;|>)', 'gm'),			css: 'color2' },	// <![ ... [ ... ]]>
-		{ regex: new XRegExp('(\\&lt;|<)!--\\s*.*?\\s*--(\\&gt;|>)', 'gm'),								css: 'comments' },	// <!-- ... -->
-		{ regex: new XRegExp('(&lt;|<)[\\s\\/\\?]*(\\w+)(?<attributes>.*?)[\\s\\/\\?]*(&gt;|>)', 'sg'), func: process }
-	];
-};
+		this.regexList = [
+			{ regex: new XRegExp('(\\&lt;|<)\\!\\[[\\w\\s]*?\\[(.|\\s)*?\\]\\](\\&gt;|>)', 'gm'),			css: 'color2' },	// <![ ... [ ... ]]>
+			{ regex: SyntaxHighlighter.regexLib.xmlComments,												css: 'comments' },	// <!-- ... -->
+			{ regex: new XRegExp('(&lt;|<)[\\s\\/\\?]*(\\w+)(?<attributes>.*?)[\\s\\/\\?]*(&gt;|>)', 'sg'), func: process }
+		];
+	};
 
-SyntaxHighlighter.brushes.Xml.prototype	= new SyntaxHighlighter.Highlighter();
-SyntaxHighlighter.brushes.Xml.aliases	= ['xml', 'xhtml', 'xslt', 'html', 'xhtml'];
+	Brush.prototype	= new SyntaxHighlighter.Highlighter();
+	Brush.aliases	= ['xml', 'xhtml', 'xslt', 'html'];
+
+	SyntaxHighlighter.brushes.Xml = Brush;
+
+	// CommonJS
+	typeof(exports) != 'undefined' ? exports.Brush = Brush : null;
+})();

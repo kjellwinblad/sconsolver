@@ -1,184 +1,120 @@
 /**
  * SyntaxHighlighter
- * http://alexgorbatchev.com/
+ * http://alexgorbatchev.com/SyntaxHighlighter
+ *
+ * SyntaxHighlighter is donationware. If you are using it, please donate.
+ * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
  *
  * @version
- * 2.0.278 (February 03 2009)
- *
- * @author
- * Alex Gorbatchev
+ * 3.0.83 (July 02 2010)
  * 
  * @copyright
- * Copyright (C) 2004-2009 Alex Gorbatchev.
+ * Copyright (C) 2004-2010 Alex Gorbatchev.
  *
- * Licensed under a GNU Lesser General Public License.
- * http://creativecommons.org/licenses/LGPL/2.1/
- *
- * SyntaxHighlighter is donationware. You are allowed to download, modify and distribute 
- * the source code in accordance with LGPL 2.1 license, however if you want to use 
- * SyntaxHighlighter on your site or include it in your product, you must donate.
- * http://alexgorbatchev.com/wiki/SyntaxHighlighter:Donate
+ * @license
+ * Dual licensed under the MIT and GPL licenses.
  */
-/**
- * Django SyntaxHighlighter theme
- */
-
-/************************************
- * Interface elements.
- ************************************/
-
-.syntaxhighlighter
-{
-	background-color: #0B2F20;
+.syntaxhighlighter {
+  background-color: #0a2b1d !important;
+}
+.syntaxhighlighter .line.alt1 {
+  background-color: #0a2b1d !important;
+}
+.syntaxhighlighter .line.alt2 {
+  background-color: #0a2b1d !important;
+}
+.syntaxhighlighter .line.highlighted.alt1, .syntaxhighlighter .line.highlighted.alt2 {
+  background-color: #233729 !important;
+}
+.syntaxhighlighter .line.highlighted.number {
+  color: white !important;
+}
+.syntaxhighlighter table caption {
+  color: #f8f8f8 !important;
+}
+.syntaxhighlighter .gutter {
+  color: #497958 !important;
+}
+.syntaxhighlighter .gutter .line {
+  border-right: 3px solid #41a83e !important;
+}
+.syntaxhighlighter .gutter .line.highlighted {
+  background-color: #41a83e !important;
+  color: #0a2b1d !important;
+}
+.syntaxhighlighter.printing .line .content {
+  border: none !important;
+}
+.syntaxhighlighter.collapsed {
+  overflow: visible !important;
+}
+.syntaxhighlighter.collapsed .toolbar {
+  color: #96dd3b !important;
+  background: black !important;
+  border: 1px solid #41a83e !important;
+}
+.syntaxhighlighter.collapsed .toolbar a {
+  color: #96dd3b !important;
+}
+.syntaxhighlighter.collapsed .toolbar a:hover {
+  color: white !important;
+}
+.syntaxhighlighter .toolbar {
+  color: white !important;
+  background: #41a83e !important;
+  border: none !important;
+}
+.syntaxhighlighter .toolbar a {
+  color: white !important;
+}
+.syntaxhighlighter .toolbar a:hover {
+  color: #ffe862 !important;
+}
+.syntaxhighlighter .plain, .syntaxhighlighter .plain a {
+  color: #f8f8f8 !important;
+}
+.syntaxhighlighter .comments, .syntaxhighlighter .comments a {
+  color: #336442 !important;
+}
+.syntaxhighlighter .string, .syntaxhighlighter .string a {
+  color: #9df39f !important;
+}
+.syntaxhighlighter .keyword {
+  color: #96dd3b !important;
+}
+.syntaxhighlighter .preprocessor {
+  color: #91bb9e !important;
+}
+.syntaxhighlighter .variable {
+  color: #ffaa3e !important;
+}
+.syntaxhighlighter .value {
+  color: #f7e741 !important;
+}
+.syntaxhighlighter .functions {
+  color: #ffaa3e !important;
+}
+.syntaxhighlighter .constants {
+  color: #e0e8ff !important;
+}
+.syntaxhighlighter .script {
+  font-weight: bold !important;
+  color: #96dd3b !important;
+  background-color: none !important;
+}
+.syntaxhighlighter .color1, .syntaxhighlighter .color1 a {
+  color: #eb939a !important;
+}
+.syntaxhighlighter .color2, .syntaxhighlighter .color2 a {
+  color: #91bb9e !important;
+}
+.syntaxhighlighter .color3, .syntaxhighlighter .color3 a {
+  color: #edef7d !important;
 }
 
-/* Highlighed line number */
-.syntaxhighlighter .line.highlighted .number
-{
-	background-color: #336442;
-	color: #fff;
+.syntaxhighlighter .comments {
+  font-style: italic !important;
 }
-
-/* Highlighed line */
-.syntaxhighlighter .line.highlighted .content
-{
-	background-color: #336442 !important;
-}
-
-/* Gutter line numbers */
-.syntaxhighlighter .line .number
-{
-	color: #497958;
-}
-
-/* Add border to the lines */
-.syntaxhighlighter .line .content
-{
-	border-left: 3px solid #41A83E;
-	color: #B9BDB6;
-}
-
-.syntaxhighlighter.printing .line .content 
-{
-	border: 0;
-}
-
-/* First line */
-.syntaxhighlighter .line.alt1 .content
-{
-}
-
-/* Second line */
-.syntaxhighlighter .line.alt2 .content
-{
-	background-color: #0a2b1d;
-}
-
-.syntaxhighlighter .line .content .block
-{
-	background: url(wrapping.png) 0 1.1em no-repeat;
-}
-
-.syntaxhighlighter .ruler
-{
-	color: #C4B14A;
-	background-color: #245032;
-	border-left: 3px solid #41A83E;
-}
-
-.syntaxhighlighter.nogutter .ruler
-{
-	border: 0;
-}
-
-.syntaxhighlighter .toolbar
-{
-	background-color: #245032;
-	border: #0B2F20 solid 1px;
-}
-
-.syntaxhighlighter .toolbar a
-{
-	color: #C4B14A;
-}
-
-.syntaxhighlighter .toolbar a:hover
-{
-	color: #FFE862;
-}
-
-/************************************
- * Actual syntax highlighter colors.
- ************************************/
-.syntaxhighlighter .plain,
-.syntaxhighlighter .plain a
-{
-	color: #F8F8F8;
-}
-
-.syntaxhighlighter .comments,
-.syntaxhighlighter .comments a
-{ 
-	color: #336442;
-	font-style: italic;
-}
-
-.syntaxhighlighter .string,
-.syntaxhighlighter .string a
-{
-	color: #9DF39F; 
-}
-
-.syntaxhighlighter .keyword
-{ 
-	color: #96DD3B; 
-	font-weight: bold !important;
-}
-
-.syntaxhighlighter .preprocessor 
-{ 
-	color: #91BB9E; 
-}
-
-.syntaxhighlighter .variable 
-{ 
-	color: #FFAA3E; 
-}
-
-.syntaxhighlighter .value
-{ 
-	color: #F7E741; 
-}
-
-.syntaxhighlighter .functions
-{ 
-	color: #FFAA3E; 
-}
-
-.syntaxhighlighter .constants
-{ 
-	color: #E0E8FF; 
-}
-
-.syntaxhighlighter .script
-{ 
-	background-color: #497958 !important;
-}
-
-.syntaxhighlighter .color1,
-.syntaxhighlighter .color1 a
-{ 
-	color: #EB939A; 
-}
-
-.syntaxhighlighter .color2,
-.syntaxhighlighter .color2 a
-{ 
-	color: #91BB9E; 
-}
-
-.syntaxhighlighter .color3,
-.syntaxhighlighter .color3 a
-{ 
-	color: #EDEF7D; 
+.syntaxhighlighter .keyword {
+  font-weight: bold !important;
 }

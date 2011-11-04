@@ -1,183 +1,113 @@
 /**
  * SyntaxHighlighter
- * http://alexgorbatchev.com/
+ * http://alexgorbatchev.com/SyntaxHighlighter
+ *
+ * SyntaxHighlighter is donationware. If you are using it, please donate.
+ * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
  *
  * @version
- * 2.0.278 (February 03 2009)
- *
- * @author
- * Alex Gorbatchev
+ * 3.0.83 (July 02 2010)
  * 
  * @copyright
- * Copyright (C) 2004-2009 Alex Gorbatchev.
+ * Copyright (C) 2004-2010 Alex Gorbatchev.
  *
- * Licensed under a GNU Lesser General Public License.
- * http://creativecommons.org/licenses/LGPL/2.1/
- *
- * SyntaxHighlighter is donationware. You are allowed to download, modify and distribute 
- * the source code in accordance with LGPL 2.1 license, however if you want to use 
- * SyntaxHighlighter on your site or include it in your product, you must donate.
- * http://alexgorbatchev.com/wiki/SyntaxHighlighter:Donate
+ * @license
+ * Dual licensed under the MIT and GPL licenses.
  */
-/**
- * RDark SyntaxHighlighter theme based on theme by Radu Dineiu
- * http://www.vim.org/scripts/script.php?script_id=1732
- */
-
-/************************************
- * Interface elements.
- ************************************/
-
-.syntaxhighlighter
-{
-	background-color: #1B2426;
+.syntaxhighlighter {
+  background-color: #1b2426 !important;
 }
-
-/* Highlighed line number */
-.syntaxhighlighter .line.highlighted .number
-{
-	background-color: #435A5F;
-	color: #fff;
+.syntaxhighlighter .line.alt1 {
+  background-color: #1b2426 !important;
 }
-
-/* Highlighed line */
-.syntaxhighlighter .line.highlighted .content
-{
-	background-color: #435A5F !important;
+.syntaxhighlighter .line.alt2 {
+  background-color: #1b2426 !important;
 }
-
-/* Gutter line numbers */
-.syntaxhighlighter .line .number
-{
-	color: #B9BDB6;
+.syntaxhighlighter .line.highlighted.alt1, .syntaxhighlighter .line.highlighted.alt2 {
+  background-color: #323e41 !important;
 }
-
-/* Add border to the lines */
-.syntaxhighlighter .line .content
-{
-	border-left: 3px solid #435A5F;
-	color: #B9BDB6;
+.syntaxhighlighter .line.highlighted.number {
+  color: #b9bdb6 !important;
 }
-
-.syntaxhighlighter.printing .line .content 
-{
-	border: 0;
+.syntaxhighlighter table caption {
+  color: #b9bdb6 !important;
 }
-
-/* First line */
-.syntaxhighlighter .line.alt1 .content
-{
-	background-color: #1B2426;
+.syntaxhighlighter .gutter {
+  color: #afafaf !important;
 }
-
-/* Second line */
-.syntaxhighlighter .line.alt2 .content
-{
-	background-color: #1B2426;
+.syntaxhighlighter .gutter .line {
+  border-right: 3px solid #435a5f !important;
 }
-
-.syntaxhighlighter .line .content .block
-{
-	background: url(wrapping.png) 0 1.1em no-repeat;
+.syntaxhighlighter .gutter .line.highlighted {
+  background-color: #435a5f !important;
+  color: #1b2426 !important;
 }
-
-.syntaxhighlighter .ruler
-{
-	color: silver;
-	background-color: #1B2426;
-	border-left: 3px solid #435A5F;
+.syntaxhighlighter.printing .line .content {
+  border: none !important;
 }
-
-.syntaxhighlighter.nogutter .ruler
-{
-	border: 0;
+.syntaxhighlighter.collapsed {
+  overflow: visible !important;
 }
-
-.syntaxhighlighter .toolbar
-{
-	background-color: #1B2426;
+.syntaxhighlighter.collapsed .toolbar {
+  color: #5ba1cf !important;
+  background: black !important;
+  border: 1px solid #435a5f !important;
 }
-
-.syntaxhighlighter .toolbar a
-{
-	color: #646763;
+.syntaxhighlighter.collapsed .toolbar a {
+  color: #5ba1cf !important;
 }
-
-.syntaxhighlighter .toolbar a:hover
-{
-	color: #E0E8FF;
+.syntaxhighlighter.collapsed .toolbar a:hover {
+  color: #5ce638 !important;
 }
-
-/************************************
- * Actual syntax highlighter colors.
- ************************************/
-.syntaxhighlighter .plain,
-.syntaxhighlighter .plain a
-{ 
-	color: #B9BDB6;
+.syntaxhighlighter .toolbar {
+  color: white !important;
+  background: #435a5f !important;
+  border: none !important;
 }
-
-.syntaxhighlighter .comments,
-.syntaxhighlighter .comments a
-{ 
-	color: #878A85;
+.syntaxhighlighter .toolbar a {
+  color: white !important;
 }
-
-.syntaxhighlighter .string,
-.syntaxhighlighter .string a
-{
-	color: #5CE638; 
+.syntaxhighlighter .toolbar a:hover {
+  color: #e0e8ff !important;
 }
-
-.syntaxhighlighter .keyword
-{ 
-	color: #5BA1CF; 
+.syntaxhighlighter .plain, .syntaxhighlighter .plain a {
+  color: #b9bdb6 !important;
 }
-
-.syntaxhighlighter .preprocessor 
-{ 
-	color: #435A5F; 
+.syntaxhighlighter .comments, .syntaxhighlighter .comments a {
+  color: #878a85 !important;
 }
-
-.syntaxhighlighter .variable 
-{ 
-	color: #FFAA3E; 
+.syntaxhighlighter .string, .syntaxhighlighter .string a {
+  color: #5ce638 !important;
 }
-
-.syntaxhighlighter .value
-{ 
-	color: #090; 
+.syntaxhighlighter .keyword {
+  color: #5ba1cf !important;
 }
-
-.syntaxhighlighter .functions
-{ 
-	color: #FFAA3E; 
+.syntaxhighlighter .preprocessor {
+  color: #435a5f !important;
 }
-
-.syntaxhighlighter .constants
-{ 
-	color: #E0E8FF; 
+.syntaxhighlighter .variable {
+  color: #ffaa3e !important;
 }
-
-.syntaxhighlighter .script
-{ 
-	background-color: #435A5F !important;
+.syntaxhighlighter .value {
+  color: #009900 !important;
 }
-
-.syntaxhighlighter .color1,
-.syntaxhighlighter .color1 a
-{ 
-	color: #E0E8FF; 
+.syntaxhighlighter .functions {
+  color: #ffaa3e !important;
 }
-
-.syntaxhighlighter .color2,
-.syntaxhighlighter .color2 a
-{ 
-	color: #FFFFFF; 
+.syntaxhighlighter .constants {
+  color: #e0e8ff !important;
 }
-
-.syntaxhighlighter .color3,
-.syntaxhighlighter .color3 a
-{ 
-	color: #FFAA3E; 
+.syntaxhighlighter .script {
+  font-weight: bold !important;
+  color: #5ba1cf !important;
+  background-color: none !important;
+}
+.syntaxhighlighter .color1, .syntaxhighlighter .color1 a {
+  color: #e0e8ff !important;
+}
+.syntaxhighlighter .color2, .syntaxhighlighter .color2 a {
+  color: white !important;
+}
+.syntaxhighlighter .color3, .syntaxhighlighter .color3 a {
+  color: #ffaa3e !important;
 }

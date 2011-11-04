@@ -1,56 +1,65 @@
 /**
  * SyntaxHighlighter
- * http://alexgorbatchev.com/
+ * http://alexgorbatchev.com/SyntaxHighlighter
+ *
+ * SyntaxHighlighter is donationware. If you are using it, please donate.
+ * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
  *
  * @version
- * 2.0.278 (February 03 2009)
- *
- * @author
- * Alex Gorbatchev
+ * 3.0.83 (July 02 2010)
  * 
  * @copyright
- * Copyright (C) 2004-2009 Alex Gorbatchev.
+ * Copyright (C) 2004-2010 Alex Gorbatchev.
  *
- * Licensed under a GNU Lesser General Public License.
- * http://creativecommons.org/licenses/LGPL/2.1/
- *
- * SyntaxHighlighter is donationware. You are allowed to download, modify and distribute 
- * the source code in accordance with LGPL 2.1 license, however if you want to use 
- * SyntaxHighlighter on your site or include it in your product, you must donate.
- * http://alexgorbatchev.com/wiki/SyntaxHighlighter:Donate
+ * @license
+ * Dual licensed under the MIT and GPL licenses.
  */
-SyntaxHighlighter.brushes.CSharp = function()
+;(function()
 {
-	var keywords =	'abstract as base bool break byte case catch char checked class const ' +
-					'continue decimal default delegate do double else enum event explicit ' +
-					'extern false finally fixed float for foreach get goto if implicit in int ' +
-					'interface internal is lock long namespace new null object operator out ' +
-					'override params private protected public readonly ref return sbyte sealed set ' +
-					'short sizeof stackalloc static string struct switch this throw true try ' +
-					'typeof uint ulong unchecked unsafe ushort using virtual void while';
+	// CommonJS
+	typeof(require) != 'undefined' ? SyntaxHighlighter = require('shCore').SyntaxHighlighter : null;
 
-	function fixComments(match, regexInfo)
+	function Brush()
 	{
-		var css = (match[0].indexOf("///") == 0)
-			? 'color1'
-			: 'comments'
-			;
+		var keywords =	'abstract as base bool break byte case catch char checked class const ' +
+						'continue decimal default delegate do double else enum event explicit ' +
+						'extern false finally fixed float for foreach get goto if implicit in int ' +
+						'interface internal is lock long namespace new null object operator out ' +
+						'override params private protected public readonly ref return sbyte sealed set ' +
+						'short sizeof stackalloc static string struct switch this throw true try ' +
+						'typeof uint ulong unchecked unsafe ushort using virtual void while';
+
+		function fixComments(match, regexInfo)
+		{
+			var css = (match[0].indexOf("///") == 0)
+				? 'color1'
+				: 'comments'
+				;
 			
-		return [new SyntaxHighlighter.Match(match[0], match.index, css)];
-	}
+			return [new SyntaxHighlighter.Match(match[0], match.index, css)];
+		}
 
-	this.regexList = [
-		{ regex: SyntaxHighlighter.regexLib.singleLineCComments,	func : fixComments },		// one line comments
-		{ regex: SyntaxHighlighter.regexLib.multiLineCComments,		css: 'comments' },			// multiline comments
-		{ regex: SyntaxHighlighter.regexLib.doubleQuotedString,		css: 'string' },			// strings
-		{ regex: SyntaxHighlighter.regexLib.singleQuotedString,		css: 'string' },			// strings
-		{ regex: /^\s*#.*/gm,										css: 'preprocessor' },		// preprocessor tags like #region and #endregion
-		{ regex: new RegExp(this.getKeywords(keywords), 'gm'),		css: 'keyword' }			// c# keyword
-		];
+		this.regexList = [
+			{ regex: SyntaxHighlighter.regexLib.singleLineCComments,	func : fixComments },		// one line comments
+			{ regex: SyntaxHighlighter.regexLib.multiLineCComments,		css: 'comments' },			// multiline comments
+			{ regex: /@"(?:[^"]|"")*"/g,								css: 'string' },			// @-quoted strings
+			{ regex: SyntaxHighlighter.regexLib.doubleQuotedString,		css: 'string' },			// strings
+			{ regex: SyntaxHighlighter.regexLib.singleQuotedString,		css: 'string' },			// strings
+			{ regex: /^\s*#.*/gm,										css: 'preprocessor' },		// preprocessor tags like #region and #endregion
+			{ regex: new RegExp(this.getKeywords(keywords), 'gm'),		css: 'keyword' },			// c# keyword
+			{ regex: /\bpartial(?=\s+(?:class|interface|struct)\b)/g,	css: 'keyword' },			// contextual keyword: 'partial'
+			{ regex: /\byield(?=\s+(?:return|break)\b)/g,				css: 'keyword' }			// contextual keyword: 'yield'
+			];
 		
-	this.forHtmlScript(SyntaxHighlighter.regexLib.aspScriptTags);
-};
+		this.forHtmlScript(SyntaxHighlighter.regexLib.aspScriptTags);
+	};
 
-SyntaxHighlighter.brushes.CSharp.prototype	= new SyntaxHighlighter.Highlighter();
-SyntaxHighlighter.brushes.CSharp.aliases	= ['c-sharp', 'csharp'];
+	Brush.prototype	= new SyntaxHighlighter.Highlighter();
+	Brush.aliases	= ['c#', 'c-sharp', 'csharp'];
+
+	SyntaxHighlighter.brushes.CSharp = Brush;
+
+	// CommonJS
+	typeof(exports) != 'undefined' ? exports.Brush = Brush : null;
+})();
 

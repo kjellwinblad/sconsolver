@@ -1,23 +1,18 @@
 /**
  * SyntaxHighlighter
- * http://alexgorbatchev.com/
+ * http://alexgorbatchev.com/SyntaxHighlighter
+ *
+ * SyntaxHighlighter is donationware. If you are using it, please donate.
+ * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
  *
  * @version
- * 2.0.278 (February 03 2009)
- *
- * @author
- * Alex Gorbatchev
+ * 3.0.83 (July 02 2010)
  * 
  * @copyright
- * Copyright (C) 2004-2009 Alex Gorbatchev.
+ * Copyright (C) 2004-2010 Alex Gorbatchev.
  *
- * Licensed under a GNU Lesser General Public License.
- * http://creativecommons.org/licenses/LGPL/2.1/
- *
- * SyntaxHighlighter is donationware. You are allowed to download, modify and distribute 
- * the source code in accordance with LGPL 2.1 license, however if you want to use 
- * SyntaxHighlighter on your site or include it in your product, you must donate.
- * http://alexgorbatchev.com/wiki/SyntaxHighlighter:Donate
+ * @license
+ * Dual licensed under the MIT and GPL licenses.
  */
 var dp = {
 	SyntaxHighlighter : {}
@@ -59,8 +54,8 @@ dp.SyntaxHighlighter = {
 		var parts = input.split(':'),
 			brushName = parts[0],
 			options = {},
-			straight = { 'true' : 'true' }
-			reverse = { 'true' : 'false' },
+			straight = { 'true' : true }
+			reverse = { 'true' : false },
 			result = null,
 			defaults = SyntaxHighlighter.defaults
 			;
@@ -73,17 +68,15 @@ dp.SyntaxHighlighter = {
 		collapseAll = asString(defaultValue(collapseAll, defaults.collapse)); 
 		showColumns = asString(defaultValue(showColumns, defaults.ruler));
 		firstLine = asString(defaultValue(firstLine, defaults['first-line'])); 
-		
-		result = {
+
+		return {
 			brush			: brushName,
 			gutter			: defaultValue(reverse[options.nogutter], showGutter),
 			toolbar			: defaultValue(reverse[options.nocontrols], showControls),
 			collapse		: defaultValue(straight[options.collapse], collapseAll),
-			ruler			: defaultValue(straight[options.showcolumns], showColumns),
+			// ruler			: defaultValue(straight[options.showcolumns], showColumns),
 			'first-line'	: defaultValue(getValue(parts, 'firstline'), firstLine)
 		};
-		
-		return result;
 	},
 	
 	HighlightAll: function(
