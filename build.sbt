@@ -4,12 +4,11 @@ organization := "me.winsh"
 
 version := "2.9.1"
 
-scalacOptions ++= Seq("-deprecation")
+scalacOptions ++= Seq("-deprecation", "-feature")
 
-seq(com.typesafe.sbtscalariform.ScalariformPlugin.defaultSettings: _*)
-
-libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "1.9.2" % "test"
 
 libraryDependencies += "junit" % "junit" % "4.8" % "test->default"
 
 libraryDependencies += "com.novocode" % "junit-interface" % "0.7" % "test->default"
+
