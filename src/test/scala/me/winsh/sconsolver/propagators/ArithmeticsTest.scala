@@ -252,7 +252,7 @@ class ArithmeticsTest {
 
     assertTrue(solutions.isEmpty)
   }
-  /*
+
   @Test
   def divTest1 {
 
@@ -273,7 +273,6 @@ class ArithmeticsTest {
     }
 
     val solutions = simpleCSP.findAllSolutions
-    println(solutions)
     assertEquals(27, solutions.size)
   }
   @Test
@@ -296,10 +295,10 @@ class ArithmeticsTest {
 
     val solutions2 = simpleCSP2.findAllSolutions
 
-    assertEquals(List(-1, -1) ::: List.fill(2)(0) ::: List(1, 1), solutions2.sort(_ < _))
+    assertEquals(List(-1, -1) ::: List.fill(2)(0) ::: List(1, 1), solutions2.sortWith(_ < _))
 
   }
-*/
+
   @Test
   def divTest3 {
     val simpleCSP3 = new CSPModel[Int] {
@@ -411,5 +410,46 @@ class ArithmeticsTest {
     val solutions = simpleCSP.findAllSolutions
 
     assertEquals(solutions.size, 1)
+  }
+
+  @Test
+  def digitSecondPower {
+
+    for(numOfDigits <- 4 to 4){
+
+      val simpleCSP = new BasicCSPModel {
+
+        val vars = Array.fill(numOfDigits)(newIntVar(0 to 9))
+
+        def power(num:Int, pow:Int, soFar:Int = -1):Int = {
+          if(soFar == -1){
+            power(num, pow, num)
+          }else if (pow == 0){
+            1
+          }else if (pow == 1){
+            soFar
+          }else{
+            power(num, pow -1, num * soFar)
+          }
+        }
+        val theNum = (0 to (numOfDigits-1)).map((digit:Int)=>{
+          val exp =vars(digit) * c(power(10, numOfDigits -1 - digit))
+          exp
+        }).fold(c(0))((soFar, theVar) => (soFar + theVar))
+
+        val theSum = (0 to (numOfDigits-1)).map((digit:Int)=>{
+          (vars(digit) * vars(digit))
+        }).fold(c(0))((soFar, theVar) => (soFar + theVar))
+
+        satisfy(theNum === theSum)
+
+        override def solutionStoreToSolution(st: Store) = {
+          st
+        }
+      }
+
+      assertEquals(simpleCSP.findAllSolutions.size, 2)
+
+    }
   }
 }

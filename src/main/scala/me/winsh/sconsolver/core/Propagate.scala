@@ -23,7 +23,7 @@ object Propagate {
         val (newSubsumedProps, newSleepingProps1, newProps1) = propMessage match {
           case Subsumed => (prop :: subsumedProps, sleepingProps, propsRest)
           case FixPoint => (subsumedProps, prop :: sleepingProps, propsRest)
-          case NoFixPoint if (s == newS) => (subsumedProps, sleepingProps, propsRest)
+          case NoFixPoint if (s == newS) => (subsumedProps, prop::sleepingProps, propsRest)
           case NoFixPoint => (subsumedProps, sleepingProps, props)
           case Failed => (subsumedProps, sleepingProps, propsRest)
         }

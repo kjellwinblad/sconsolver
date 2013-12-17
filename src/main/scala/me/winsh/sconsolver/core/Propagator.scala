@@ -18,11 +18,10 @@ trait Propagator {
 
   override def equals(that: Any) = {
     val thatP = that.asInstanceOf[Propagator]
-
     thatP.parameters == this.parameters && this.getClass.getName == thatP.getClass.getName
   }
 
-  override def hashCode = parameters.hashCode / 2 + this.getClass.getName.hashCode / 2
+  override def hashCode = parameters.hashCode  + this.getClass.getName.hashCode
 
   override def toString = this.getClass.getName + "(" + parameters.mkString(", ") + ")"
 

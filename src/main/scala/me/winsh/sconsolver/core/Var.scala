@@ -6,7 +6,7 @@ trait Var {
 
   override def equals(that: Any) = that.asInstanceOf[Var].id == this.id
 
-  override def hashCode = id.toString.hashCode()
+  override def hashCode = id
 
   override def toString = "Var(" + id + ")"
 }
